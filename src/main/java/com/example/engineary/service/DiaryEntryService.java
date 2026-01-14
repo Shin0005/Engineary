@@ -29,10 +29,13 @@ public class DiaryEntryService {
 
     //update
     public DiaryEntry updateDiaryEntry(Long id, DiaryEntry entryDetails){
-        //Optional<DEntry>をDEntryに変換できないと出るが、optionalはnullかもしれないことを
-        //表すので、nullの例外処理を書かないと型変換できない?ggr
-        DiaryEntry entry = diaryEntryRepository.findById(id);
+        DiaryEntry entry = diaryEntryRepository.findById(id)
+            .orElseThrow(() -> new RuntimeException("タスクが見つかりません: " + id));
+
         entry.setTitle(entryDetails.getTitle());
-        //項目追加・lombok用の書き方を調べる
+        entry.setContents(entryDetails.getContents());
+        //追加
+
+        return diaryEntryRepository.save(entry);
     }
 }

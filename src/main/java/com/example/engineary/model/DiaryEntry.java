@@ -5,8 +5,10 @@ import java.time.LocalDateTime;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
+import lombok.Data;
 
 @Entity
+@Data
 @Table(name = "entries")
 public class DiaryEntry {
     /* 投稿ID 日付で生成*/
