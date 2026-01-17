@@ -24,7 +24,7 @@ public class DiaryEntryController {
     }
 
     //CRUD作成
-    //全投稿取得
+    //select all
     @GetMapping("/entries")
     public ResponseEntity<List<DiaryEntry>> getAllEntries(){
         List<DiaryEntry> entries = diaryEntryService.getAllEntries();
@@ -54,5 +54,17 @@ public class DiaryEntryController {
             return ResponseEntity.notFound().build();
         }
     }
+
+    //delete
+    @PostMapping("/{id}")
+    public ResponseEntity<DiaryEntry> deleteDiaryEntry(@PathVariable Long id){
+        try{
+            diaryEntryService.deleteDiaryEntry(id);
+            return ResponseEntity.noContent().build();
+        }catch(RuntimeException e){
+            return ResponseEntity.notFound().build();
+        }
+    }
+
     
 }
