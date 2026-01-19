@@ -25,7 +25,7 @@ public class DiaryEntryController {
 
     //CRUD作成
     //select all
-    @GetMapping("/entries")
+    @GetMapping
     public ResponseEntity<List<DiaryEntry>> getAllEntries(){
         List<DiaryEntry> entries = diaryEntryService.getAllEntries();
         return ResponseEntity.ok(entries);

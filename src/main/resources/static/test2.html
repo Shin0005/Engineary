@@ -90,17 +90,17 @@
                     <form id="diary-form">
                         <div class="mb-3">
                             <label for="title" class="form-label">タイトル</label>
-                            <input type="text" class="form-control" id="title" required>
+                            <input type="text" class="form-control" id="diary-title" required>
                         </div>
                         <div class="mb-3">
                             <label for="content" class="form-label">内容</label>
-                            <textarea class="form-control" id="content" rows="4" required></textarea>
+                            <textarea class="form-control" id="diary-content" rows="4" required></textarea>
                         </div>
                     </form>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">閉じる</button>
-                    <button type="button" class="btn btn-primary" id="btn-save">保存</button>
+                    <button type="button" class="btn btn-primary" id="diary-btn-save">保存</button>
                 </div>
             </div>
         </div>
@@ -116,6 +116,61 @@
          * 3. 「削除」ボタンが押されたら API(DELETE) を呼び出す
          */
         console.log("REST API 連携の準備ができました。");
+
+        //select all
+        window.onload = function(){
+            loadDiary();
+        };
+
+        async function loadDiary(){
+            //controllerのgetAllEntriesにアクセス
+            const res = await fetch('/diary');
+            const entries = await res.json();
+            //tbody(diary-list)の取得    
+            const listElement = document.getElementById('diary-list');
+            //初期化して、取得したentriesを代入
+            listElement.innerHTML = '';
+            entries.forEach(entry => {
+                const row = `
+                    <tr>
+                        <td>${diary.date}</td>
+                        <td>${diary.title}</td>
+                        <td>
+                            <button class="btn btn-sm btn-danger" onclick="deleteDiary(${diary.id})">削除</button>
+                        </td>
+                    </tr>`;
+                listElement.insertAdjacentHTML('beforeend',row);
+            })
+        }
+
+        //create
+        document.addEventListener('DOMContentLoaded', () => {
+            // モーダル内の「保存ボタン」を取得する。
+            const saveBtn = document.getElementById('diary-btn-save');
+
+            // クリックされた時
+            saveBtn.addEventListener('click', async () => {
+                // 3. 入力欄から値を取り出す
+                const title = document.getElementById('diary-title').value;
+                const content = document.getElementById('diary-content').value;
+
+                // JavaのAPI（POST）を呼び出す(詳細を設定，要復習)
+                const response = await fetch('/diary', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ title: title, content: content })
+                });
+
+                if (response.ok) {
+                    alert('保存しました');
+                    // 保存が終わったら画面をリロードして一覧を更新する
+                    location.reload();
+                } else {
+                    alert('保存に失敗しました');
+                }
+            });
+        });//次は画面とapiの通信を試す。
+
     </script>
 </body>
 </html>
