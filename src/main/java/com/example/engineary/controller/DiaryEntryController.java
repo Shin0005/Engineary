@@ -40,7 +40,7 @@ public class DiaryEntryController {
     }
 
     //update
-    @PostMapping("/{id}")
+    @PutMapping("/{id}")
     public ResponseEntity<DiaryEntry> updateDiaryEntry(
         @PathVariable Long id,
         @RequestBody DiaryEntry entryDetails) {
@@ -56,7 +56,7 @@ public class DiaryEntryController {
     }
 
     //delete
-    @PostMapping("/{id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity<DiaryEntry> deleteDiaryEntry(@PathVariable Long id){
         try{
             diaryEntryService.deleteDiaryEntry(id);
