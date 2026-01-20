@@ -117,7 +117,7 @@
          */
         console.log("REST API 連携の準備ができました。");
 
-        //select all
+        //サイト読み込み時にselect all
         window.onload = function(){
             loadDiary();
         };
@@ -144,17 +144,18 @@
         }
 
         //create
+        //DOMtreeが読み込まれたら以下を実行
         document.addEventListener('DOMContentLoaded', () => {
             // モーダル内の「保存ボタン」を取得する。
             const saveBtn = document.getElementById('diary-btn-save');
 
             // クリックされた時
             saveBtn.addEventListener('click', async () => {
-                // 3. 入力欄から値を取り出す
+                // 入力欄から値を取り出す　バリデーションはどこで？？
                 const title = document.getElementById('diary-title').value;
                 const content = document.getElementById('diary-content').value;
 
-                // JavaのAPI（POST）を呼び出す(詳細を設定，要復習)
+                // http通信によってapiを呼び出し
                 const response = await fetch('/diary', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
