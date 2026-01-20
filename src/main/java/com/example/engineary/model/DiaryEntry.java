@@ -4,12 +4,14 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 
 @Entity
+@EntityListeners(AuditingEntityListener.class)
 @Data
 @Table(name = "entries")
 public class DiaryEntry {
@@ -52,6 +54,9 @@ public class DiaryEntry {
         this.workedDate = workedDate;
         this.updatedAt = updatedAt;
         this.createdAt = createdAt;
+    }
+    //JPA用の空コンストラクタ
+    protected DiaryEntry(){
     }
 
     //getter setterはlombokにより省略
