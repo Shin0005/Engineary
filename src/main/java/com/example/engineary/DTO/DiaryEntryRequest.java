@@ -1,0 +1,25 @@
+package com.example.engineary.DTO;
+
+import java.time.LocalDate;
+
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
+import lombok.Data;
+
+/**
+ * 入力処理用のDTO
+ */
+@Data
+public class DiaryEntryRequest {
+    /* タイトル*/
+    @NotBlank(message="タイトルは必須です")
+    @Size(max=100, message="タイトルは100字以内で入力してください")
+    private String title;
+    
+    /* 内容 */
+    private String contents;
+    /* 作業時間 */
+    private Double workedTime;
+    /* 作業日時*/
+    private LocalDate workedDate;
+}

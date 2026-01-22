@@ -15,7 +15,7 @@ import lombok.Data;
 @Data
 @Table(name = "entries")
 public class DiaryEntry {
-    /* 投稿ID 日付で生成*/
+    /* 投稿ID*/
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -56,7 +56,7 @@ public class DiaryEntry {
         this.createdAt = createdAt;
     }
     //JPA用の空コンストラクタ
-    protected DiaryEntry(){
+    public DiaryEntry(){
     }
 
     //getter setterはlombokにより省略
