@@ -46,19 +46,6 @@ public class DiaryEntry {
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
 
-    public DiaryEntry(Long id, String title, String contents, Double workedTime, LocalDate workedDate, LocalDateTime updatedAt, LocalDateTime createdAt) {
-        this.id = id;
-        this.title = title;
-        this.contents = contents;
-        this.workedTime = workedTime;
-        this.workedDate = workedDate;
-        this.updatedAt = updatedAt;
-        this.createdAt = createdAt;
-    }
-    //JPA用の空コンストラクタ
-    public DiaryEntry(){
-    }
-
     //getter setterはlombokにより省略
 
     
