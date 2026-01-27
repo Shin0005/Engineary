@@ -18,6 +18,7 @@ public class DiaryEntryService {
 
     // selectAll
     public List<DiaryEntry> getAllEntries() {
+        //OOMの可能性、findID->findbyIDのtransactionに変更
         return diaryEntryRepository.findAll();
     }
 

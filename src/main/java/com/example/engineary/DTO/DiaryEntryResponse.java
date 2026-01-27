@@ -24,7 +24,7 @@ public class DiaryEntryResponse {
     private Double workedTime;
 
     /* 作業日時 デフォルトで当日*/
-    private LocalDate workedDate;
+    private String workedDate;
 
     /* 最終更新日時 */
     private LocalDateTime updatedAt;

@@ -94,7 +94,15 @@
                         </div>
                         <div class="mb-3">
                             <label for="content" class="form-label">内容</label>
-                            <textarea class="form-control" id="diary-content" rows="4" required></textarea>
+                            <textarea class="form-control" id="diary-content" rows="7" required></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label for="workedTime" class="form-label">作業時間</label>
+                            <input type="text" class="form-control" id="diary-workedTime" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="workedDate" class="form-label">作業日</label>
+                            <input type="text" class="form-control" id="diary-workedDate" required>
                         </div>
                     </form>
                 </div>
@@ -154,12 +162,15 @@
                 // 入力欄から値を取り出す　バリデーションはどこで？？
                 const title = document.getElementById('diary-title').value;
                 const content = document.getElementById('diary-content').value;
-
+                const workedTime = document.getElementById('diary-workedTime').value;
+                const workedDate = document.getElementById('diary-workedDate').value;
                 // http通信によってapiを呼び出し
                 const response = await fetch('/diary', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ title: title, content: content })
+                    //contents:<-api側の変数名 / content <-フロント側の変数名
+                    body: JSON.stringify({ title: title, contents: content,
+                         workedTime: workedTime, workedDate: workedDate })
                 });
 
                 if (response.ok) {
@@ -170,7 +181,7 @@
                     alert('保存に失敗しました');
                 }
             });
-        });//次は画面とapiの通信を試す。
+        });
 
     </script>
 </body>

@@ -6,10 +6,12 @@ import java.util.List;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+
+import com.example.engineary.DTO.DiaryEntryRequest;
+import com.example.engineary.DTO.DiaryEntryResponse;
+import com.example.engineary.mapper.DiaryEntryMappar;
 import com.example.engineary.model.DiaryEntry;
 import com.example.engineary.service.DiaryEntryService;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 
 
 
@@ -33,10 +35,17 @@ public class DiaryEntryController {
 
     //create
     @PostMapping
-    public ResponseEntity<DiaryEntry> createDiaryEntry(@RequestBody DiaryEntry diaryEntry){
-        DiaryEntry entry = diaryEntryService.createDiaryEntry(diaryEntry);
-
-        return ResponseEntity.status(HttpStatus.CREATED).body(entry);
+    public ResponseEntity<DiaryEntryResponse> createDiaryEntry(@RequestBody DiaryEntryRequest request){
+        //返却地にnullがあり得る
+        
+        //request(dto)からentityに変換
+        DiaryEntry entity = DiaryEntryMappar.toEntity(request);
+        //createを実行する
+        entity = diaryEntryService.createDiaryEntry(entity);
+        //entityからresponseに変換
+        DiaryEntryResponse response = DiaryEntryMappar.toResponse(entity);
+        
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
     //update

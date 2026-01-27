@@ -1,7 +1,5 @@
 package com.example.engineary.DTO;
 
-import java.time.LocalDate;
-
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
@@ -21,5 +19,5 @@ public class DiaryEntryRequest {
     /* 作業時間 */
     private Double workedTime;
     /* 作業日時*/
-    private LocalDate workedDate;
+    private String workedDate;
 }
