@@ -28,23 +28,22 @@ public class DiaryEntryController {
     //CRUD作成
     //select all
     @GetMapping
-    public ResponseEntity<List<DiaryEntry>> getAllEntries(){
-        List<DiaryEntry> entries = diaryEntryService.getAllEntries();
-        return ResponseEntity.ok(entries);
+    public ResponseEntity<List<DiaryEntryResponse>> getAllEntries(){
+        List<DiaryEntry> entities = diaryEntryService.getAllEntries();
+        //List<response>形式で返却
+        return ResponseEntity.ok(DiaryEntryMappar.toListResponse(entities));
     }
 
     //create
     @PostMapping
     public ResponseEntity<DiaryEntryResponse> createDiaryEntry(@RequestBody DiaryEntryRequest request){
-        //返却地にnullがあり得る
+        //requestにnullがあり得るがDTOの@でせき止め
         
-        //request(dto)からentityに変換
-        DiaryEntry entity = DiaryEntryMappar.toEntity(request);
-        //createを実行する
-        entity = diaryEntryService.createDiaryEntry(entity);
+        //request(dto)からentityに変換してcreate
+        DiaryEntry entity = diaryEntryService.createDiaryEntry(DiaryEntryMappar.toEntity(request));
         //entityからresponseに変換
         DiaryEntryResponse response = DiaryEntryMappar.toResponse(entity);
-        
+
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 

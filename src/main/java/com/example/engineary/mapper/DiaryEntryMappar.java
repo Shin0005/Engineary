@@ -2,6 +2,9 @@ package com.example.engineary.mapper;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 import com.example.engineary.DTO.DiaryEntryRequest;
 import com.example.engineary.DTO.DiaryEntryResponse;
@@ -13,7 +16,9 @@ import com.example.engineary.model.DiaryEntry;
 public class DiaryEntryMappar {
     /* サーバ入力dto -> Entity */
     // なぜstaticにする必要がある？メモリ的にだいじょぶ？
+    //->インスタンスを持たないときに実行したいから。メモリは問題なし
     public static DiaryEntry toEntity(DiaryEntryRequest req) {
+        //controllerではじく前提なので必要ないかも
         if (req == null) {
             return null;
         }
@@ -30,10 +35,12 @@ public class DiaryEntryMappar {
 
     /* Entity -> サーバ出力dto */
     public static DiaryEntryResponse toResponse(DiaryEntry entity) {
+        //dbから取得したentityなのでおそらく必要ない。
         if (entity == null) {
             return null;
         }
         DiaryEntryResponse res = new DiaryEntryResponse();
+        res.setId(entity.getId());
         res.setTitle(entity.getTitle());
         res.setContents(entity.getContents());
         res.setWorkedTime(entity.getWorkedTime());
@@ -42,5 +49,17 @@ public class DiaryEntryMappar {
         .format(DateTimeFormatter.ofPattern("yyyy/MM/dd")));
 
         return res;
+    }
+
+    public static List<DiaryEntryResponse> toListResponse(List<DiaryEntry> entities){
+        if(entities == null){
+            return Collections.emptyList();
+        }
+
+        List<DiaryEntryResponse> responses = new ArrayList<>();
+        for(DiaryEntry entity: entities){
+            responses.add(toResponse(entity));
+        }
+        return responses;
     }
 }

@@ -1,6 +1,5 @@
 package com.example.engineary.DTO;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 import lombok.Data;
@@ -11,9 +10,8 @@ import lombok.Data;
  */
 @Data
 public class DiaryEntryResponse {
-    /* 投稿ID*/
+    /* 日誌id */
     private Long id;
-
     /* タイトル*/
     private String title;
 
@@ -26,10 +24,10 @@ public class DiaryEntryResponse {
     /* 作業日時 デフォルトで当日*/
     private String workedDate;
 
+    //表示しないのでDBで管理すればOK
     /* 最終更新日時 */
-    private LocalDateTime updatedAt;
-
+    //private LocalDateTime updatedAt;
     /* 作成日時 */
-    private LocalDateTime createdAt;
+    //private LocalDateTime createdAt;
 
 }
