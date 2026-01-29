@@ -7,19 +7,28 @@ import org.springframework.stereotype.Service;
 import com.example.engineary.model.DiaryEntry;
 import com.example.engineary.repository.DiaryEntryRepository;
 
+import jakarta.transaction.Transactional;
+
 @Service
 public class DiaryEntryService {
 
     private final DiaryEntryRepository diaryEntryRepository;
-
+    //コンストラクタ一つならspringが暗黙的にコンストラクタ作成するため不要
     public DiaryEntryService(DiaryEntryRepository diaryEntryRepository) {
         this.diaryEntryRepository = diaryEntryRepository;
     }
 
     // selectAll
+    @Transactional
     public List<DiaryEntry> getAllEntries() {
         //OOMの可能性、findID->findbyIDのtransactionに変更
-        return diaryEntryRepository.findAll();
+        List<Long> ids = diaryEntryRepository.findIdList();
+        System.out.println(ids);
+        //findByIdをしたいが、N+1問題なのでListを与えて一気に返してもらう
+        //しかし返却地が巨大だとOOM　→　ページング導入? -> オーバースペック
+        List<DiaryEntry> entities = diaryEntryRepository.findByIdIn(ids);
+
+        return entities;
     }
 
     // create
