@@ -63,12 +63,14 @@
                             <tr>
                                 <th class="ps-4">日付</th>
                                 <th>タイトル</th>
-                                <th>操作</th>
+                                <th>内容</th>
+                                <th>作業時間</th>
+                                <th></th>
                             </tr>
                         </thead>
                         <tbody id="diary-list">
                             <tr>
-                                <td colspan="3" class="text-center py-4 text-muted">
+                                <td colspan="5" class="text-center py-4 text-muted">
                                     データを読み込み中、またはAPI未接続です...
                                 </td>
                             </tr>
@@ -146,7 +148,7 @@
                         <td>${entity.contents}</td>
                         <td>${entity.workedTime}</td>
                         <td>
-                            <button class="btn btn-sm btn-danger" onclick="deleteDiary(${entity.id})">削除</button>
+                            <button class="btn btn-sm btn-danger" onclick="deleteDiaryEntry(${entity.id})">削除</button>
                         </td>
                     </tr>`;
                 listElement.insertAdjacentHTML('beforeend',row);
@@ -184,6 +186,10 @@
                 }
             });
         });
+        //delete
+        function deleteDiaryEntry(Long){
+
+        }
 
     </script>
 </body>
