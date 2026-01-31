@@ -80,7 +80,7 @@
             </div>
         </section>
     </main>
-<!-- モーダルのサイズを大きくする。 -->
+<!-- モーダル -->
     <div class="modal fade" id="diaryModal" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -119,28 +119,22 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
     <script>
-        /*
-         * REST API 連携の考え方:
-         * 1. ページ読み込み完了時に API(GET) を呼び出し、diary-list を書き換える
-         * 2. 「保存」ボタンが押されたら API(POST) を呼び出し、画面をリロードする
-         * 3. 「削除」ボタンが押されたら API(DELETE) を呼び出す
-         */
         console.log("REST API 連携の準備ができました。");
-
-        //サイト読み込み時にselect all
+        //サイト読み込み時に日誌一覧取得
         window.onload = function(){
             loadDiary();
         };
 
+        //selectAll
         async function loadDiary(){
-            //controllerのgetAllEntriesにアクセス
             const res = await fetch('/diary');
             const entities = await res.json();
-            //tbody(diary-list)の取得    
+            //tbody(diary-list)の取得
             const listElement = document.getElementById('diary-list');
             //初期化して、取得したentitiesを代入
             listElement.innerHTML = '';
             entities.forEach(entity => {
+                //trを押したら編集モーダルを出すようにしたい
                 const row = `
                     <tr>
                         <td>${entity.workedDate}</td>
@@ -161,25 +155,22 @@
             // モーダル内の「保存ボタン」を取得する。
             const saveBtn = document.getElementById('diary-btn-save');
 
-            // クリックされた時
             saveBtn.addEventListener('click', async () => {
-                // 入力欄から値を取り出す　バリデーションはどこで？？
                 const title = document.getElementById('diary-title').value;
                 const content = document.getElementById('diary-content').value;
                 const workedTime = document.getElementById('diary-workedTime').value;
                 const workedDate = document.getElementById('diary-workedDate').value;
+
                 // http通信によってapiを呼び出し
                 const response = await fetch('/diary', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    //contents:<-api側の変数名 / content <-フロント側の変数名
                     body: JSON.stringify({ title: title, contents: content,
                          workedTime: workedTime, workedDate: workedDate })
                 });
 
                 if (response.ok) {
                     alert('保存しました');
-                    // 保存が終わったら画面をリロードして一覧を更新する
                     location.reload();
                 } else {
                     alert('保存に失敗しました');
@@ -187,19 +178,16 @@
             });
         });
         //deleteメソッド 
-        //onclick="deleteDiaryEntry()" 
         async function deleteDiaryEntry(id){ 
-            //サーバサイドのdeleteを実行したい。httpリクエストを送る 
-            try{ 
-                response = await fetch("/api/diary/${id}",{
+            try{
+                const response = await fetch(`/diary/${id}`,{
                     method: 'DELETE'
                 });
                 if(!response.ok){
-                    alert('failed...');
-                    }else{
-                        alert('success!'); 
-                    //再セレクト実行
-                    await refleshDiary();
+                    alert('削除に失敗しました。');
+                }else{
+                    alert('削除に成功しました。'); 
+                    location.reload();
                 }
             }catch(e){ 
                 //サーバー側エラーはここには来ないのでネットワークエラーが来る 
@@ -208,7 +196,6 @@
             }
         } 
         //update 
-        //onclick="updateDiaryEntry()"を追加 
         //モーダルを再利用。 
         async function updateDiaryEntry(id){
              const date ={ 
@@ -219,7 +206,6 @@
             }; 
             //モーダルに値を設定
 
-            //リクエスト
             try{ 
                 response = await fetch("/api/diary/${id}",{
                     method: 'PUT', 
@@ -232,20 +218,30 @@
                 }else{
                     alert('success!'); 
                 }
-                
-                await refleshDiary();
+
+                location.reload();
             }catch(e){ 
                 console.error(e);
             }
-        } 
-        function refleshDiary(){ 
-            //.onloadと同じロジック 
-        } 
-        //memo tagを作るなら、jsのCRUDを共通化しておく。 
-        //機能ごとにmodeを持たせて、画面を表
-        const MODE = { DIARY: 'diary', MEMO: 'memo' }; let currentMode = MODE.DIARY; 
-        //htmlの差分がある場合は共通化しておく。 
-        const viewConfig = { diary: { title: '日記', apiBase: '/api/diaries', placeholder: { title: '今日の出来事', content: '日記を書いてください' }, showDate: true }, memo: { title: 'メモ', apiBase: '/api/memos', placeholder: { title: 'メモタイトル', content: '自由にメモ' }, showDate: false } };
+        }
+
+
+        // //memo tagを作るなら、jsのCRUDを共通化しておく。 
+        // //機能ごとにmodeを持たせて、画面を表示
+        // const MODE = { DIARY: 'diary', MEMO: 'memo' };
+        // let currentMode = MODE.DIARY; 
+        // //htmlの差分がある場合は共通化しておく。 
+        // const viewConfig = {
+        //     diary: { 
+        //         title: '日記',
+        //         apiBase: '/api/diaries',
+        //         placeholder: { title: '今日の出来事', content: '日記を書いてください' },
+        //         showDate: true }, 
+        //     memo: { 
+        //         title: 'メモ',
+        //         apiBase: '/api/memos',
+        //         placeholder: { title: 'メモタイトル', content: '自由にメモ' },
+        //         showDate: false } };
 
     </script>
 </body>
