@@ -186,10 +186,66 @@
                 }
             });
         });
-        //delete
-        function deleteDiaryEntry(Long){
+        //deleteメソッド 
+        //onclick="deleteDiaryEntry()" 
+        async function deleteDiaryEntry(id){ 
+            //サーバサイドのdeleteを実行したい。httpリクエストを送る 
+            try{ 
+                response = await fetch("/api/diary/${id}",{
+                    method: 'DELETE'
+                });
+                if(!response.ok){
+                    alert('failed...');
+                    }else{
+                        alert('success!'); 
+                    //再セレクト実行
+                    await refleshDiary();
+                }
+            }catch(e){ 
+                //サーバー側エラーはここには来ないのでネットワークエラーが来る 
+                //ネットワークエラーはエラーを投げずにありましたよと言っとけばいい。 
+                console.error(e);
+            }
+        } 
+        //update 
+        //onclick="updateDiaryEntry()"を追加 
+        //モーダルを再利用。 
+        async function updateDiaryEntry(id){
+             const date ={ 
+                title: document.getElementByID('title').value, 
+                contents: document.getElementById('content').value, 
+                workedDate: document.getElementById('workedDate').value, 
+                workedTime: document.getElementById('workedTime').value
+            }; 
+            //モーダルに値を設定
 
-        }
+            //リクエスト
+            try{ 
+                response = await fetch("/api/diary/${id}",{
+                    method: 'PUT', 
+                    headers: { 'Content-Type': 'application/json' }, 
+                    body: JSON.stringify(data) 
+                }); 
+                
+                if(!response.ok){
+                    alert('failed');
+                }else{
+                    alert('success!'); 
+                }
+                
+                await refleshDiary();
+            }catch(e){ 
+                console.error(e);
+            }
+        } 
+        function refleshDiary(){ 
+            //.onloadと同じロジック 
+        } 
+        //memo tagを作るなら、jsのCRUDを共通化しておく。 
+        //機能ごとにmodeを持たせて、画面を表
+        const MODE = { DIARY: 'diary', MEMO: 'memo' }; let currentMode = MODE.DIARY; 
+        //htmlの差分がある場合は共通化しておく。 
+        const viewConfig = { diary: { title: '日記', apiBase: '/api/diaries', placeholder: { title: '今日の出来事', content: '日記を書いてください' }, showDate: true }, memo: { title: 'メモ', apiBase: '/api/memos', placeholder: { title: 'メモタイトル', content: '自由にメモ' }, showDate: false } };
 
     </script>
 </body>
