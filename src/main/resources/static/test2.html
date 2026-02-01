@@ -51,7 +51,7 @@
         <section id="diary-section">
             <div class="d-flex justify-content-between align-items-center mb-4">
                 <h2 class="fw-bold">日誌一覧</h2>
-                <button class="btn btn-primary shadow-sm" data-bs-toggle="modal" data-bs-target="#diaryModal">
+                <button class="btn btn-primary shadow-sm" data-bs-toggle="modal" data-bs-target="#diaryModal" data-mode="create">
                     + 新規作成
                 </button>
             </div>
@@ -96,7 +96,7 @@
                         </div>
                         <div class="mb-3">
                             <label for="content" class="form-label">内容</label>
-                            <textarea class="form-control" id="diary-content" rows="7" required></textarea>
+                            <textarea class="form-control" id="diary-contents" rows="7" required></textarea>
                         </div>
                         <div class="mb-3">
                             <label for="workedTime" class="form-label">作業時間</label>
@@ -118,131 +118,7 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
-    <script>
-        console.log("REST API 連携の準備ができました。");
-        //サイト読み込み時に日誌一覧取得
-        window.onload = function(){
-            loadDiary();
-        };
-
-        //selectAll
-        async function loadDiary(){
-            const res = await fetch('/diary');
-            const entities = await res.json();
-            //tbody(diary-list)の取得
-            const listElement = document.getElementById('diary-list');
-            //初期化して、取得したentitiesを代入
-            listElement.innerHTML = '';
-            entities.forEach(entity => {
-                //trを押したら編集モーダルを出すようにしたい
-                const row = `
-                    <tr>
-                        <td>${entity.workedDate}</td>
-                        <td>${entity.title}</td>
-                        <td>${entity.contents}</td>
-                        <td>${entity.workedTime}</td>
-                        <td>
-                            <button class="btn btn-sm btn-danger" onclick="deleteDiaryEntry(${entity.id})">削除</button>
-                        </td>
-                    </tr>`;
-                listElement.insertAdjacentHTML('beforeend',row);
-            })
-        }
-
-        //create
-        //DOMtreeが読み込まれたら以下を実行
-        document.addEventListener('DOMContentLoaded', () => {
-            // モーダル内の「保存ボタン」を取得する。
-            const saveBtn = document.getElementById('diary-btn-save');
-
-            saveBtn.addEventListener('click', async () => {
-                const title = document.getElementById('diary-title').value;
-                const content = document.getElementById('diary-content').value;
-                const workedTime = document.getElementById('diary-workedTime').value;
-                const workedDate = document.getElementById('diary-workedDate').value;
-
-                // http通信によってapiを呼び出し
-                const response = await fetch('/diary', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ title: title, contents: content,
-                         workedTime: workedTime, workedDate: workedDate })
-                });
-
-                if (response.ok) {
-                    alert('保存しました');
-                    location.reload();
-                } else {
-                    alert('保存に失敗しました');
-                }
-            });
-        });
-        //deleteメソッド 
-        async function deleteDiaryEntry(id){ 
-            try{
-                const response = await fetch(`/diary/${id}`,{
-                    method: 'DELETE'
-                });
-                if(!response.ok){
-                    alert('削除に失敗しました。');
-                }else{
-                    alert('削除に成功しました。'); 
-                    location.reload();
-                }
-            }catch(e){ 
-                //サーバー側エラーはここには来ないのでネットワークエラーが来る 
-                //ネットワークエラーはエラーを投げずにありましたよと言っとけばいい。 
-                console.error(e);
-            }
-        } 
-        //update 
-        //モーダルを再利用。 
-        async function updateDiaryEntry(id){
-             const date ={ 
-                title: document.getElementByID('title').value, 
-                contents: document.getElementById('content').value, 
-                workedDate: document.getElementById('workedDate').value, 
-                workedTime: document.getElementById('workedTime').value
-            }; 
-            //モーダルに値を設定
-
-            try{ 
-                response = await fetch("/api/diary/${id}",{
-                    method: 'PUT', 
-                    headers: { 'Content-Type': 'application/json' }, 
-                    body: JSON.stringify(data) 
-                }); 
-                
-                if(!response.ok){
-                    alert('failed');
-                }else{
-                    alert('success!'); 
-                }
-
-                location.reload();
-            }catch(e){ 
-                console.error(e);
-            }
-        }
-
-
-        // //memo tagを作るなら、jsのCRUDを共通化しておく。 
-        // //機能ごとにmodeを持たせて、画面を表示
-        // const MODE = { DIARY: 'diary', MEMO: 'memo' };
-        // let currentMode = MODE.DIARY; 
-        // //htmlの差分がある場合は共通化しておく。 
-        // const viewConfig = {
-        //     diary: { 
-        //         title: '日記',
-        //         apiBase: '/api/diaries',
-        //         placeholder: { title: '今日の出来事', content: '日記を書いてください' },
-        //         showDate: true }, 
-        //     memo: { 
-        //         title: 'メモ',
-        //         apiBase: '/api/memos',
-        //         placeholder: { title: 'メモタイトル', content: '自由にメモ' },
-        //         showDate: false } };
-
-    </script>
+    <script src="\test2_crud.js"></script>
+    <script src="\test2_modal.js"></script>
 </body>
 </html>

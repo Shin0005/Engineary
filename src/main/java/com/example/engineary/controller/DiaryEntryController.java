@@ -49,14 +49,17 @@ public class DiaryEntryController {
 
     //update
     @PutMapping("/{id}")
-    public ResponseEntity<DiaryEntry> updateDiaryEntry(
+    public ResponseEntity<DiaryEntryResponse> updateDiaryEntry(
         @PathVariable Long id,
-        @RequestBody DiaryEntry entryDetails) {
-
+        @RequestBody DiaryEntryRequest req) {
+            
+        //reqからentityに変換
+        DiaryEntry entityDetail = DiaryEntryMappar.toEntity(req);
         //update実行
         try{
-            DiaryEntry updatedEntry = diaryEntryService.updateDiaryEntry(id, entryDetails);
-            return ResponseEntity.ok(updatedEntry);
+            DiaryEntry updatedEntry = diaryEntryService.updateDiaryEntry(id, entityDetail);
+            DiaryEntryResponse res = DiaryEntryMappar.toResponse(updatedEntry);
+            return ResponseEntity.ok(res);
         }catch(RuntimeException e){
             //eをどう使う。
             return ResponseEntity.notFound().build();

@@ -23,7 +23,7 @@ public class DiaryEntryService {
     public List<DiaryEntry> getAllEntries() {
         //OOMの可能性、findID->findbyIDのtransactionに変更
         List<Long> ids = diaryEntryRepository.findIdList();
-        System.out.println(ids);
+
         //findByIdをしたいが、N+1問題なのでListを与えて一気に返してもらう
         //しかし返却地が巨大だとOOM　→　ページング導入? -> オーバースペック
         List<DiaryEntry> entities = diaryEntryRepository.findByIdIn(ids);
