@@ -34,7 +34,7 @@ async function loadDiary(){
                                 data-contents="${entity.contents}"
                                 data-date="${entity.workedDate}"
                                 data-time="${entity.workedTime}">編集</button>
-                            <button class="btn btn-sm btn-danger" data-id="${entity.id}">削除</button>
+                            <button class="btn btn-sm btn-danger btn-delete" data-id="${entity.id}">削除</button>
                         </td>
                     </tr>`;
                 listElement.insertAdjacentHTML('beforeend',row);
