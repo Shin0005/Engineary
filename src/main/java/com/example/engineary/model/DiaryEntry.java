@@ -7,21 +7,22 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 
+/**
+ * entriesテーブル Modelクラス
+ */
 @Entity
 @EntityListeners(AuditingEntityListener.class)
 @Data
 @Table(name = "entries")
 public class DiaryEntry {
-    /* 投稿ID*/
+    /* 投稿Id*/
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     /* タイトル*/
-    @NotBlank(message = "タイトルは必須です")
     private String title;
 
     /* tag 別テーブルから参照*/
@@ -45,10 +46,4 @@ public class DiaryEntry {
     @CreatedDate
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
-
-    //getter setterはlombokにより省略
-
-    
-
-
 }

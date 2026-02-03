@@ -14,26 +14,33 @@ import com.example.engineary.model.DiaryEntry;
  * 入出力処理用DTOとEntity(DiaryEntry)のMapper
  */
 public class DiaryEntryMappar {
-    /* サーバ入力dto -> Entity */
-    // なぜstaticにする必要がある？メモリ的にだいじょぶ？
-    //->インスタンスを持たないときに実行したいから。メモリは問題なし
+    /** 
+     * Request -> Entity の変換メソッド
+     * @param req DiaryEntryRequest
+     */
     public static DiaryEntry toEntity(DiaryEntryRequest req) {
         //controllerではじく前提なので必要ないかも
         if (req == null) {
             return null;
         }
+        //entityはDI(ここでは疎結合)できないか？ジェネリクスを使って緩衝層のメソッドを作るのか？
+        //ファイルが増えるので余計な可能性
         DiaryEntry entity = new DiaryEntry();
+
         entity.setTitle(req.getTitle());
         entity.setContents(req.getContents());
         entity.setWorkedTime(req.getWorkedTime());
         // String(YYYY/MM/DD)からLocalDate変換
         entity.setWorkedDate(LocalDate.parse(req.getWorkedDate(),
                 DateTimeFormatter.ofPattern("yyyy/MM/dd")));
-
         return entity;
     }
 
-    /* Entity -> サーバ出力dto */
+    /** 
+     * Entity -> Response の変換メソッド
+     * @param entity DiaryEntry
+     * @return DiaryEntryResponse
+     */
     public static DiaryEntryResponse toResponse(DiaryEntry entity) {
         //dbから取得したentityなのでおそらく必要ない。
         if (entity == null) {
@@ -50,7 +57,11 @@ public class DiaryEntryMappar {
 
         return res;
     }
-
+    /**
+     * List<Entity> -> List<Response> の変換メソッド
+     * @param entities List<DiaryEntry>
+     * @return List<DiaryEntryResponse>
+     */
     public static List<DiaryEntryResponse> toListResponse(List<DiaryEntry> entities){
         if(entities == null){
             return Collections.emptyList();

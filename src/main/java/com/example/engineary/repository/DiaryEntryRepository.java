@@ -8,9 +8,11 @@ import org.springframework.stereotype.Repository;
 
 import com.example.engineary.model.DiaryEntry;
 
+/**
+ * 日誌レポジトリーインターフェース
+ */
 @Repository
 public interface DiaryEntryRepository extends JpaRepository<DiaryEntry, Long>{
-    //springとhibernateが抽象メソッドを勝手に実装
     //現在hibernate+Jpaを使っているが、この程度のクエリを生成できないなら将来的にMybatisを使いたい。
     @Query("select d.id from DiaryEntry d")
     public List<Long> findIdList();
