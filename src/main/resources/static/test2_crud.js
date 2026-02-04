@@ -7,39 +7,35 @@ window.onload = function(){
 //selectAll
 async function loadDiary(){
     try{
-        const res = await fetch('/diary');
-        const entities = await res.json();
+        const entities = await apiFetch('/api/diary',{method:'GET'});
 
-        if (!res.ok) {
-            alert('データ取得に失敗しました');
-        } else {
-            //tbody(diary-list)の取得
-            const listElement = document.getElementById('diary-list');
-            //初期化して、取得したentitiesを代入
-            listElement.innerHTML = '';
-            entities.forEach(entity => {
-                const row = `
-                    <tr>
-                        <td>${entity.workedDate}</td>
-                        <td>${entity.title}</td>
-                        <td>${entity.contents}</td>
-                        <td>${entity.workedTime}</td>
-                        <td>
-                            <button class="btn btn-sm btn-primary" 
-                                data-bs-toggle="modal" 
-                                data-bs-target="#diaryModal" 
-                                data-mode="edit" 
-                                data-id="${entity.id}"
-                                data-title="${entity.title}"
-                                data-contents="${entity.contents}"
-                                data-date="${entity.workedDate}"
-                                data-time="${entity.workedTime}">編集</button>
-                            <button class="btn btn-sm btn-danger btn-delete" data-id="${entity.id}">削除</button>
-                        </td>
-                    </tr>`;
-                listElement.insertAdjacentHTML('beforeend',row);
-            })
-        }
+        //tbody(diary-list)の取得
+        const listElement = document.getElementById('diary-list');
+        //初期化して、取得したentitiesを代入
+        listElement.innerHTML = '';
+        entities.forEach(entity => {
+            const row = `
+                <tr>
+                    <td>${entity.workedDate}</td>
+                    <td>${entity.title}</td>
+                    <td>${entity.contents}</td>
+                    <td>${entity.workedTime}</td>
+                    <td>
+                        <button class="btn btn-sm btn-primary" 
+                            data-bs-toggle="modal" 
+                            data-bs-target="#diaryModal" 
+                            data-mode="edit" 
+                            data-id="${entity.id}"
+                            data-title="${entity.title}"
+                            data-contents="${entity.contents}"
+                            data-date="${entity.workedDate}"
+                            data-time="${entity.workedTime}">編集</button>
+                        <button class="btn btn-sm btn-danger btn-delete" data-id="${entity.id}">削除</button>
+                    </td>
+                </tr>`;
+            listElement.insertAdjacentHTML('beforeend',row);
+        })
+        
         
     }catch(e){
         console.error(e);
@@ -110,8 +106,39 @@ async function deleteDiaryEntry(id){
             location.reload();
         }
     }catch(e){ 
-        //サーバー側エラーはここには来ないのでネットワークエラーが来る 
-        //ネットワークエラーはエラーを投げずにありましたよと言っとけばいい。 
         console.error(e);
     }
-} 
+}
+
+//引数から情報を取り出す(必要に合わせて加工)。取り出した情報をfetchに入れる。例外処理を行う。
+async function apiFetch(url, { method = 'GET', headers = {}, body = null}) {
+    //headersはbodyがStringなので固定(formでやるかも)
+    const config = {
+        method,
+        headers: {
+            'Content-Type': 'application/json',
+            ...headers,
+        }
+    };
+
+    // bodyがある場合のみJSON文字列化して追加
+    if (body) {
+        config.body = JSON.stringify(body);
+    }
+        //取り出した情報をfetchに入れて例外処理
+        try{
+            const response = await fetch(url,config);
+            //http系エラー 番号で分岐
+            if(!response.ok)
+                throw new Error();
+
+            return response.json();
+
+        }catch(error){
+            //ネットワーク系エラー
+            console.error(error.message)
+            //呼び出し元にerror投げる
+            throw new Error();
+        }
+        
+}
