@@ -12,14 +12,18 @@ modal.addEventListener("show.bs.modal", (event) => {
     const modalTitle = modal.querySelector(".modal-title");
    
     if (mode === "create") {
+
         modalTitle.textContent = "新規作成";
         // フォームを空にする
         titleInput.value = "";
         contentsInput.value = "";
         timeInput.value = "";
+        // 今日の"YYYY-MM-DD" を取得して設定
+        //api修正後に修正
         dateInput.value = "";
+        //  new Date().toISOString().split('T')[0];
         delete modal.dataset.currentId;
-
+    
     } else if (mode === "edit") {
         modalTitle.textContent = "編集";
         // ボタンに仕込んだ data-属性から値をセット

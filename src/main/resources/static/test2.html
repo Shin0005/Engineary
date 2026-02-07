@@ -92,25 +92,27 @@
                     <form id="diary-form">
                         <div class="mb-3">
                             <label for="title" class="form-label">タイトル</label>
-                            <input type="text" class="form-control" id="diary-title" required>
+                            <input type="text" class="form-control" id="diary-title">
+                            <div id="title-error" class="invalid-feedback"></div>
                         </div>
                         <div class="mb-3">
                             <label for="content" class="form-label">内容</label>
-                            <textarea class="form-control" id="diary-contents" rows="7" required></textarea>
+                            <textarea class="form-control" id="diary-contents" rows="7"></textarea>
                         </div>
                         <div class="mb-3">
                             <label for="workedTime" class="form-label">作業時間</label>
-                            <input type="text" class="form-control" id="diary-workedTime" required>
+                            <input type="text" class="form-control" id="diary-workedTime">
+                            <div id="workedTime-error" class="invalid-feedback"></div>
                         </div>
                         <div class="mb-3">
                             <label for="workedDate" class="form-label">作業日</label>
-                            <input type="text" class="form-control" id="diary-workedDate" required>
+                            <input type="date" class="form-control" id="diary-workedDate">
                         </div>
                     </form>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">閉じる</button>
-                    <button type="button" class="btn btn-primary" id="diary-btn-save">保存</button>
+                    <button type="submit" form="diary-form" class="btn btn-primary" id="diary-btn-save">保存</button>
                 </div>
             </div>
         </div>
