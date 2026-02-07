@@ -37,8 +37,9 @@ async function loadDiary(){
         })
         
         
-    }catch(e){
-        console.error(e);
+    }catch(error){
+        console.error(error.message);
+        //画面にも表示失敗した旨を表示したい。
     }
 }
 
@@ -62,12 +63,14 @@ document.addEventListener('DOMContentLoaded', () => {
         const id = document.getElementById('diaryModal').dataset.currentId;
         // IDがあればPUT、なければPOST
         const method = id ? 'PUT' : 'POST';
-        const url = id ? `/diary/${id}` : '/diary';
+        const url = id ? `/api/diary/${id}` : '/api/diary';
 
         editDiaryEntry(url, method)
         
     });
 });
+
+
 
 //createAndupdateメソッド
 async function editDiaryEntry(url, method) {
@@ -77,42 +80,46 @@ async function editDiaryEntry(url, method) {
             workedTime: document.getElementById('diary-workedTime').value,
             workedDate: document.getElementById('diary-workedDate').value
         };
+    
     try{
-        const response = await fetch(url, {
+        await apiFetch(url, {
             method: method,
-            headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify(data)
+            body: data
         });
-
-        if (!response.ok) {
-            alert('保存に失敗しました');
-        } else {
-            location.reload();
+        
+        // モーダルを閉じる処理を追加
+        const modalElement = document.getElementById('diaryModal');
+        const modalInstance = bootstrap.Modal.getInstance(modalElement);
+        if (modalInstance) {
+            modalInstance.hide();
         }
-    }catch(e){
-        console.error(e);
+
+        await loadDiary();
+    }catch(error){
+        console.error(error.message);
+        //画面にも表示失敗した旨を表示したい。
     }
 }
 
 //deleteメソッド 
 async function deleteDiaryEntry(id){ 
     try{
-        const response = await fetch(`/diary/${id}`,{
+        await apiFetch(`/api/diary/${id}`,{
             method: 'DELETE'
         });
-        if(!response.ok){
-            alert('削除に失敗しました。');
-        }else{
-            location.reload();
-        }
-    }catch(e){ 
-        console.error(e);
+        
+        await loadDiary();
+        
+    }catch(error){ 
+        console.error(error.message);
+        //画面にも表示失敗した旨を表示したい。
     }
 }
 
 //引数から情報を取り出す(必要に合わせて加工)。取り出した情報をfetchに入れる。例外処理を行う。
 async function apiFetch(url, { method = 'GET', headers = {}, body = null}) {
     //headersはbodyがStringなので固定(formでやるかも)
+    
     const config = {
         method,
         headers: {
@@ -121,24 +128,34 @@ async function apiFetch(url, { method = 'GET', headers = {}, body = null}) {
         }
     };
 
-    // bodyがある場合のみJSON文字列化して追加
-    if (body) {
+    // bodyがあるかつStringのみJSON文字列化して追加
+    if (body && typeof body != 'string') {
         config.body = JSON.stringify(body);
     }
-        //取り出した情報をfetchに入れて例外処理
-        try{
-            const response = await fetch(url,config);
-            //http系エラー 番号で分岐
-            if(!response.ok)
-                throw new Error();
+    //取り出した情報をfetchに入れて例外処理
+    let response;
+    try{
+        response = await fetch(url,config);
+    }catch(error){
+        //ネットワーク系エラー
+        console.error(error.message)
+        //呼び出し元にerror投げる
+        throw new Error("Network Error");
+    }
 
-            return response.json();
-
-        }catch(error){
-            //ネットワーク系エラー
-            console.error(error.message)
-            //呼び出し元にerror投げる
-            throw new Error();
-        }
+    //http系エラー 後で番号で分岐
+    if(!response.ok){
+        const error = new Error("HttpError");
+        error.status = response.status;
+        throw error;
+    }
+    const contentType = response.headers.get('content-type');
+    // bodyなし
+    if (!contentType) {
+        return;
+    }else if(contentType.includes('application/json')){
+        return await response.json();
+    }
+    return await response.text();
         
 }
