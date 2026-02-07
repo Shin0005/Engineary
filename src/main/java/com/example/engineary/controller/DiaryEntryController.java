@@ -13,6 +13,8 @@ import com.example.engineary.mapper.DiaryEntryMappar;
 import com.example.engineary.model.DiaryEntry;
 import com.example.engineary.service.DiaryEntryService;
 
+import jakarta.validation.Valid;
+
 /**
  * 日誌機能コントローラ
  */
@@ -42,7 +44,7 @@ public class DiaryEntryController {
      * @param request フロント入力
      */
     @PostMapping
-    public ResponseEntity<DiaryEntryResponse> createDiaryEntry(@RequestBody DiaryEntryRequest request){
+    public ResponseEntity<DiaryEntryResponse> createDiaryEntry(@Valid @RequestBody DiaryEntryRequest request){
         //request(dto)からentityに変換してcreate
         DiaryEntry entity = diaryEntryService.createDiaryEntry(DiaryEntryMappar.toEntity(request));
         //response形式で返却
@@ -59,7 +61,7 @@ public class DiaryEntryController {
     @PutMapping("/{id}")
     public ResponseEntity<DiaryEntryResponse> updateDiaryEntry(
         @PathVariable Long id,
-        @RequestBody DiaryEntryRequest request) {
+        @Valid @RequestBody DiaryEntryRequest request) {
             
         //reqからentityに変換
         DiaryEntry entityDetail = DiaryEntryMappar.toEntity(request);
