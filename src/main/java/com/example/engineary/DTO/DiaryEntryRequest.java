@@ -10,18 +10,18 @@ import lombok.Data;
  */
 @Data
 public class DiaryEntryRequest {
-    /* タイトル */
+    /** タイトル */
     @NotBlank(message = "タイトルは必須です")
     @Size(max = 100, message = "タイトルは100字以内で入力してください")
 
     private String title;
 
-    /* 内容 */
+    /** 内容 */
     private String contents;
 
-    /* 作業時間 */
+    /** 作業時間 */
     private Double workedTime;
 
-    /* 作業日時 */
+    /** 作業日時 */
     private String workedDate;
 }
