@@ -20,7 +20,7 @@ public class DiaryEntryRequest {
     private String contents;
 
     /** 作業時間 */
-    private Double workedTime;
+    private Integer workedTime;
 
     /** 作業日時 */
     private String workedDate;
