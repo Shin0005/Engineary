@@ -70,6 +70,8 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 });
 
+
+
 //createAndupdateメソッド
 async function editDiaryEntry(url, method) {
     const data = {
@@ -84,8 +86,15 @@ async function editDiaryEntry(url, method) {
             method: method,
             body: data
         });
+        
+        // モーダルを閉じる処理を追加
+        const modalElement = document.getElementById('diaryModal');
+        const modalInstance = bootstrap.Modal.getInstance(modalElement);
+        if (modalInstance) {
+            modalInstance.hide();
+        }
 
-        location.reload();
+        await loadDiary();
     }catch(error){
         console.error(error.message);
         //画面にも表示失敗した旨を表示したい。
@@ -99,7 +108,7 @@ async function deleteDiaryEntry(id){
             method: 'DELETE'
         });
         
-        location.reload();
+        await loadDiary();
         
     }catch(error){ 
         console.error(error.message);
@@ -145,8 +154,8 @@ async function apiFetch(url, { method = 'GET', headers = {}, body = null}) {
     if (!contentType) {
         return;
     }else if(contentType.includes('application/json')){
-        return response.json();
+        return await response.json();
     }
-    return response.text();
+    return await response.text();
         
 }
