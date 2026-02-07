@@ -1,6 +1,7 @@
 package com.example.engineary.DTO;
 
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
 
@@ -13,7 +14,6 @@ public class DiaryEntryRequest {
     /** タイトル */
     @NotBlank(message = "タイトルは必須です")
     @Size(max = 100, message = "タイトルは100字以内で入力してください")
-
     private String title;
 
     /** 内容 */
@@ -23,5 +23,6 @@ public class DiaryEntryRequest {
     private Integer workedTime;
 
     /** 作業日時 */
+    @NotBlank
     private String workedDate;
 }

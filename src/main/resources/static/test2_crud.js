@@ -38,7 +38,7 @@ async function loadDiary() {
 
 
     } catch (error) {
-        console.error(error.message);
+        console.error("ErrorMessage: " + error.message);
         //画面にも表示失敗した旨を表示したい。
     }
 }
@@ -99,7 +99,7 @@ async function editDiaryEntry(url, method) {
 
         await loadDiary();
     } catch (error) {
-        console.error(error.message);
+        console.error("ErrorMessage: " + error.message);
         //画面にも表示失敗した旨を表示したい。
     }
 }
@@ -114,7 +114,7 @@ async function deleteDiaryEntry(id) {
         await loadDiary();
 
     } catch (error) {
-        console.error(error.message);
+        console.error("ErrorMessage: " + error.message);
         //画面にも表示失敗した旨を表示したい。
     }
 }
