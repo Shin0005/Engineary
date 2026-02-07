@@ -33,7 +33,7 @@ public class DiaryEntryMappar {
         entity.setWorkedTime(req.getWorkedTime());
         // String(YYYY/MM/DD)からLocalDate変換
         entity.setWorkedDate(LocalDate.parse(req.getWorkedDate(),
-                DateTimeFormatter.ofPattern("yyyy/MM/dd")));
+                DateTimeFormatter.ofPattern("yyyy-MM-dd")));
         return entity;
     }
 
