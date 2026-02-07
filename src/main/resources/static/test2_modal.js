@@ -1,7 +1,7 @@
 const modal = document.getElementById("diaryModal");
 modal.addEventListener("show.bs.modal", (event) => {
     //押されたボタンを判別(bs特有)
-    const button = event.relatedTarget; 
+    const button = event.relatedTarget;
     // ボタンのdate-modeを取得
     const mode = button.getAttribute("data-mode");
 
@@ -10,7 +10,7 @@ modal.addEventListener("show.bs.modal", (event) => {
     const timeInput = document.getElementById('diary-workedTime');
     const dateInput = document.getElementById('diary-workedDate');
     const modalTitle = modal.querySelector(".modal-title");
-   
+
     if (mode === "create") {
 
         modalTitle.textContent = "新規作成";
@@ -23,7 +23,7 @@ modal.addEventListener("show.bs.modal", (event) => {
         dateInput.value = "";
         //  new Date().toISOString().split('T')[0];
         delete modal.dataset.currentId;
-    
+
     } else if (mode === "edit") {
         modalTitle.textContent = "編集";
         // ボタンに仕込んだ data-属性から値をセット

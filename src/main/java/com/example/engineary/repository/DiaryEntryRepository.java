@@ -12,8 +12,8 @@ import com.example.engineary.model.DiaryEntry;
  * 日誌レポジトリーインターフェース
  */
 @Repository
-public interface DiaryEntryRepository extends JpaRepository<DiaryEntry, Long>{
-    //現在hibernate+Jpaを使っているが、この程度のクエリを生成できないなら将来的にMybatisを使いたい。
+public interface DiaryEntryRepository extends JpaRepository<DiaryEntry, Long> {
+    // 現在hibernate+Jpaを使っているが、この程度のクエリを生成できないなら将来的にMybatisを使いたい。
     @Query("select d.id from DiaryEntry d")
     public List<Long> findIdList();
 

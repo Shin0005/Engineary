@@ -23,7 +23,8 @@ import jakarta.validation.Valid;
 public class DiaryEntryController {
 
     private final DiaryEntryService diaryEntryService;
-    //DI(autowiredは１コンストラクタの時省略可)
+
+    // DI(autowiredは１コンストラクタの時省略可)
     public DiaryEntryController(DiaryEntryService diaryEntryService) {
         this.diaryEntryService = diaryEntryService;
     }
@@ -32,22 +33,23 @@ public class DiaryEntryController {
      * 全項目取得メソッド
      */
     @GetMapping
-    public ResponseEntity<List<DiaryEntryResponse>> getAllEntries(){
+    public ResponseEntity<List<DiaryEntryResponse>> getAllEntries() {
         List<DiaryEntry> entities = diaryEntryService.getAllEntries();
-        //List<response>形式で返却
+        // List<response>形式で返却
         List<DiaryEntryResponse> response = DiaryEntryMappar.toListResponse(entities);
         return ResponseEntity.ok(response);
     }
 
     /**
      * 新規作成メソッド
+     * 
      * @param request フロント入力
      */
     @PostMapping
-    public ResponseEntity<DiaryEntryResponse> createDiaryEntry(@Valid @RequestBody DiaryEntryRequest request){
-        //request(dto)からentityに変換してcreate
+    public ResponseEntity<DiaryEntryResponse> createDiaryEntry(@Valid @RequestBody DiaryEntryRequest request) {
+        // request(dto)からentityに変換してcreate
         DiaryEntry entity = diaryEntryService.createDiaryEntry(DiaryEntryMappar.toEntity(request));
-        //response形式で返却
+        // response形式で返却
         DiaryEntryResponse response = DiaryEntryMappar.toResponse(entity);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
@@ -55,24 +57,25 @@ public class DiaryEntryController {
     /**
      * 更新メソッド<br>
      * 指定されたidのレコードに対して更新を行う。
-     * @param id 日誌Id
+     * 
+     * @param id      日誌Id
      * @param request フロント入力
      */
     @PutMapping("/{id}")
     public ResponseEntity<DiaryEntryResponse> updateDiaryEntry(
-        @PathVariable Long id,
-        @Valid @RequestBody DiaryEntryRequest request) {
-            
-        //reqからentityに変換
+            @PathVariable Long id,
+            @Valid @RequestBody DiaryEntryRequest request) {
+
+        // reqからentityに変換
         DiaryEntry entityDetail = DiaryEntryMappar.toEntity(request);
 
-        try{
+        try {
             DiaryEntry updatedEntry = diaryEntryService.updateDiaryEntry(id, entityDetail);
-            //response形式で返却
+            // response形式で返却
             DiaryEntryResponse res = DiaryEntryMappar.toResponse(updatedEntry);
             return ResponseEntity.ok(res);
-        }catch(RuntimeException e){
-            //eをどう使う。
+        } catch (RuntimeException e) {
+            // eをどう使う。
             return ResponseEntity.notFound().build();
         }
     }
@@ -80,15 +83,16 @@ public class DiaryEntryController {
     /**
      * 削除メソッド<br>
      * 指定されたidのレコードを削除する。
+     * 
      * @param id 日誌Id
      */
     @DeleteMapping("/{id}")
-    public ResponseEntity<DiaryEntry> deleteDiaryEntry(@PathVariable Long id){
-        try{
+    public ResponseEntity<DiaryEntry> deleteDiaryEntry(@PathVariable Long id) {
+        try {
             diaryEntryService.deleteDiaryEntry(id);
             return ResponseEntity.noContent().build();
-        }catch(RuntimeException e){
-            //ewotukau
+        } catch (RuntimeException e) {
+            // ewotukau
             return ResponseEntity.notFound().build();
         }
     }

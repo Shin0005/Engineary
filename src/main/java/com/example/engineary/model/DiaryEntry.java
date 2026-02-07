@@ -19,17 +19,17 @@ import lombok.Data;
 @Data
 @Table(name = "entries")
 public class DiaryEntry {
-    /** 投稿Id*/
+    /** 投稿Id */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    /** タイトル*/
+    /** タイトル */
     @NotBlank
     private String title;
 
-    /** tag 別テーブルから参照*/
-    //private Set<Tag> tag;
+    /** tag 別テーブルから参照 */
+    // private Set<Tag> tag;
 
     /** 内容 */
     private String contents;

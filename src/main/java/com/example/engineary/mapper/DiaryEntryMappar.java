@@ -14,17 +14,18 @@ import com.example.engineary.model.DiaryEntry;
  * 入出力処理用DTOとEntity(DiaryEntry)のMapper
  */
 public class DiaryEntryMappar {
-    /** 
+    /**
      * Request -> Entity の変換メソッド
+     * 
      * @param req DiaryEntryRequest
      */
     public static DiaryEntry toEntity(DiaryEntryRequest req) {
-        //controllerではじく前提なので必要ないかも
+        // controllerではじく前提なので必要ないかも
         if (req == null) {
             return null;
         }
-        //entityはDI(ここでは疎結合)できないか？ジェネリクスを使って緩衝層のメソッドを作るのか？
-        //ファイルが増えるので余計な可能性
+        // entityはDI(ここでは疎結合)できないか？ジェネリクスを使って緩衝層のメソッドを作るのか？
+        // ファイルが増えるので余計な可能性
         DiaryEntry entity = new DiaryEntry();
 
         entity.setTitle(req.getTitle());
@@ -36,13 +37,14 @@ public class DiaryEntryMappar {
         return entity;
     }
 
-    /** 
+    /**
      * Entity -> Response の変換メソッド
+     * 
      * @param entity DiaryEntry
      * @return DiaryEntryResponse
      */
     public static DiaryEntryResponse toResponse(DiaryEntry entity) {
-        //dbから取得したentityなのでおそらく必要ない。
+        // dbから取得したentityなのでおそらく必要ない。
         if (entity == null) {
             return null;
         }
@@ -53,22 +55,24 @@ public class DiaryEntryMappar {
         res.setWorkedTime(entity.getWorkedTime());
         // LocalDateをString(YYYY/MM/DD)に変換
         res.setWorkedDate(entity.getWorkedDate()
-        .format(DateTimeFormatter.ofPattern("yyyy/MM/dd")));
+                .format(DateTimeFormatter.ofPattern("yyyy/MM/dd")));
 
         return res;
     }
+
     /**
      * List<Entity> -> List<Response> の変換メソッド
+     * 
      * @param entities List<DiaryEntry>
      * @return List<DiaryEntryResponse>
      */
-    public static List<DiaryEntryResponse> toListResponse(List<DiaryEntry> entities){
-        if(entities == null){
+    public static List<DiaryEntryResponse> toListResponse(List<DiaryEntry> entities) {
+        if (entities == null) {
             return Collections.emptyList();
         }
 
         List<DiaryEntryResponse> responses = new ArrayList<>();
-        for(DiaryEntry entity: entities){
+        for (DiaryEntry entity : entities) {
             responses.add(toResponse(entity));
         }
         return responses;
