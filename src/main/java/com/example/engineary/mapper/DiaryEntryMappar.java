@@ -24,14 +24,13 @@ public class DiaryEntryMappar {
         if (req == null) {
             return null;
         }
-        // entityはDI(ここでは疎結合)できないか？ジェネリクスを使って緩衝層のメソッドを作るのか？
-        // ファイルが増えるので余計な可能性
+
         DiaryEntry entity = new DiaryEntry();
 
         entity.setTitle(req.getTitle());
         entity.setContents(req.getContents());
-        entity.setWorkedTime(req.getWorkedTime());
-        // String(YYYY/MM/DD)からLocalDate変換
+        entity.setWorkedTime(Double.valueOf(req.getWorkedTime()));
+        // String(YYYY-MM-DD)からLocalDate変換
         entity.setWorkedDate(LocalDate.parse(req.getWorkedDate(),
                 DateTimeFormatter.ofPattern("yyyy-MM-dd")));
         return entity;
