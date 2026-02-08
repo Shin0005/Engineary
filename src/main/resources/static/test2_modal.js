@@ -2,14 +2,14 @@ const modal = document.getElementById("diaryModal");
 //モーダルを閉じるタイミングの処理
 modal.addEventListener("hidden.bs.modal", () => {
     const form = document.getElementById('diary-form');
-    
+
     // 入力値のクリア
-    form.reset(); 
-    
+    form.reset();
+
     // すべてのバリデーションエラーの除去
     const inputs = form.querySelectorAll('.is-invalid');
     inputs.forEach(input => input.classList.remove('is-invalid'));
-    
+
     // 編集用IDの削除
     delete modal.dataset.currentId;
 });
@@ -28,7 +28,7 @@ modal.addEventListener("show.bs.modal", (event) => {
     if (mode === "create") {
         modalTitle.textContent = "新規作成";
         // 今日の日付をセット
-        dateInput.value = new Date().toISOString().split('T')[0];
+        dateInput.value = new Date().toLocaleDateString('sv-SE');
 
     } else if (mode === "edit") {
         modalTitle.textContent = "編集";
@@ -36,7 +36,10 @@ modal.addEventListener("show.bs.modal", (event) => {
         titleInput.value = button.getAttribute("data-title");
         contentsInput.value = button.getAttribute("data-contents");
         timeInput.value = button.getAttribute("data-time");
-        dateInput.value = button.getAttribute("data-date");
+        //DateOBJに変換してから代入
+        const rawDateObj = new Date(button.getAttribute("data-date"));
+        const formattedDate = rawDateObj.toLocaleDateString('sv-SE');
+        dateInput.value = formattedDate;
         // 現在編集中のIDをモーダル自体に覚えさせる
         modal.dataset.currentId = button.getAttribute("data-id");
     }
