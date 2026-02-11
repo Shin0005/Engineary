@@ -4,6 +4,9 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
+import com.example.engineary.DTO.DiaryEntryRequest;
+import com.example.engineary.DTO.DiaryEntryResponse;
+import com.example.engineary.mapper.DiaryEntryMappar;
 import com.example.engineary.model.DiaryEntry;
 import com.example.engineary.repository.DiaryEntryRepository;
 
@@ -20,27 +23,36 @@ public class DiaryEntryService {
 
     // selectAll
     @Transactional
-    public List<DiaryEntry> getAllEntries() {
+    public List<DiaryEntryResponse> getAllEntries() {
         //OOMの可能性、findID->findbyIDのtransactionに変更
         List<Long> ids = diaryEntryRepository.findIdList();
 
         //findByIdをしたいが、N+1問題なのでListを与えて一気に返してもらう
         //しかし返却地が巨大だとOOM　→　ページング導入? -> オーバースペック
         List<DiaryEntry> entities = diaryEntryRepository.findByIdIn(ids);
-
-        return entities;
+        List<DiaryEntryResponse> responses = DiaryEntryMappar.toListResponse(entities);
+        // List<response>形式で返却
+        return responses;
     }
 
     // create
-    public DiaryEntry createDiaryEntry(DiaryEntry diaryEntry) {
-        return diaryEntryRepository.save(diaryEntry);
+    public DiaryEntryResponse createDiaryEntry(DiaryEntryRequest request) {
+        DiaryEntry inputEntity = DiaryEntryMappar.toEntity(request);
+        DiaryEntry outputEntity = diaryEntryRepository.save(inputEntity);
+
+        DiaryEntryResponse response = DiaryEntryMappar.toResponse(outputEntity);
+
+        return response;
     }
 
     // update
-    public DiaryEntry updateDiaryEntry(Long id, DiaryEntry entryDetails) {
+    public void updateDiaryEntry(Long id, DiaryEntryRequest request) {
+        // task: 新たな例外ハンドルクラスを作成し、異常系の処理を行う。
         DiaryEntry entry = diaryEntryRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("タスクが見つかりません: " + id));
+                
 
+        DiaryEntry entryDetails = DiaryEntryMappar.toEntity(request);
         entry.setTitle(entryDetails.getTitle());
         entry.setContents(entryDetails.getContents());
         entry.setWorkedTime(entryDetails.getWorkedTime());
@@ -48,12 +60,13 @@ public class DiaryEntryService {
         entry.setUpdatedAt(entryDetails.getUpdatedAt());
         entry.setCreatedAt(entryDetails.getCreatedAt());
 
-        return diaryEntryRepository.save(entry);
+        diaryEntryRepository.save(entry); 
     }
 
     // delete
     public void deleteDiaryEntry(Long id) {
         // エラーを明確に出すためにfind->delete
+        // task: 例外クラス作成
         diaryEntryRepository.findById(id)
                 .ifPresentOrElse(diaryEntryRepository::delete,
                         () -> {

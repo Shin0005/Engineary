@@ -34,10 +34,9 @@ public class DiaryEntryController {
      */
     @GetMapping
     public ResponseEntity<List<DiaryEntryResponse>> getAllEntries() {
-        List<DiaryEntry> entities = diaryEntryService.getAllEntries();
-        // List<response>形式で返却
-        List<DiaryEntryResponse> response = DiaryEntryMappar.toListResponse(entities);
-        return ResponseEntity.ok(response);
+        List<DiaryEntryResponse> responses = diaryEntryService.getAllEntries();
+        
+        return ResponseEntity.ok(responses);
     }
 
     /**
@@ -48,9 +47,8 @@ public class DiaryEntryController {
     @PostMapping
     public ResponseEntity<DiaryEntryResponse> createDiaryEntry(@Valid @RequestBody DiaryEntryRequest request) {
         // request(dto)からentityに変換してcreate
-        DiaryEntry entity = diaryEntryService.createDiaryEntry(DiaryEntryMappar.toEntity(request));
-        // response形式で返却
-        DiaryEntryResponse response = DiaryEntryMappar.toResponse(entity);
+        DiaryEntryResponse response = diaryEntryService.createDiaryEntry(request);
+
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
@@ -62,22 +60,15 @@ public class DiaryEntryController {
      * @param request フロント入力
      */
     @PutMapping("/{id}")
-    public ResponseEntity<DiaryEntryResponse> updateDiaryEntry(
+    public ResponseEntity<Void> updateDiaryEntry(
             @PathVariable Long id,
             @Valid @RequestBody DiaryEntryRequest request) {
 
-        // reqからentityに変換
-        DiaryEntry entityDetail = DiaryEntryMappar.toEntity(request);
-
-        try {
-            DiaryEntry updatedEntry = diaryEntryService.updateDiaryEntry(id, entityDetail);
-            // response形式で返却
-            DiaryEntryResponse res = DiaryEntryMappar.toResponse(updatedEntry);
-            return ResponseEntity.ok(res);
-        } catch (RuntimeException e) {
-            // eをどう使う。
-            return ResponseEntity.notFound().build();
-        }
+        diaryEntryService.updateDiaryEntry(id, request);
+        
+        return ResponseEntity.ok().build();
+        // eをどう使う。
+        //return ResponseEntity.notFound().build();
     }
 
     /**
@@ -87,14 +78,13 @@ public class DiaryEntryController {
      * @param id 日誌Id
      */
     @DeleteMapping("/{id}")
-    public ResponseEntity<DiaryEntry> deleteDiaryEntry(@PathVariable Long id) {
-        try {
-            diaryEntryService.deleteDiaryEntry(id);
-            return ResponseEntity.noContent().build();
-        } catch (RuntimeException e) {
-            // ewotukau
-            return ResponseEntity.notFound().build();
-        }
+    public ResponseEntity<Void> deleteDiaryEntry(@PathVariable Long id) {
+        
+        diaryEntryService.deleteDiaryEntry(id);
+        return ResponseEntity.noContent().build();
+
+        //    return ResponseEntity.notFound().build();
+        
     }
 
 }
