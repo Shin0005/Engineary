@@ -1,4 +1,4 @@
-package com.example.engineary.DTO;
+package com.example.engineary.dto;
 
 import lombok.Data;
 

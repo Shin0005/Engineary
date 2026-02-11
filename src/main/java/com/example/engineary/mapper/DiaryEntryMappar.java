@@ -6,8 +6,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import com.example.engineary.DTO.DiaryEntryRequest;
-import com.example.engineary.DTO.DiaryEntryResponse;
+import com.example.engineary.dto.DiaryEntryRequest;
+import com.example.engineary.dto.DiaryEntryResponse;
 import com.example.engineary.model.DiaryEntry;
 
 /**
