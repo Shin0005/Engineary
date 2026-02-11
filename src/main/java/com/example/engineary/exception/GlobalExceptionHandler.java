@@ -1,8 +1,14 @@
 package com.example.engineary.exception;
 
 import com.example.engineary.dto.ErrorResponse;
+import com.example.engineary.dto.FieldValidationError;
+import com.example.engineary.dto.ValidationErrorResponse;
+
+import java.util.List;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 
 /**
@@ -17,6 +23,7 @@ public class GlobalExceptionHandler {
 
         ErrorResponse response = new ErrorResponse(ex.getErrorCode(), ex.getMessage());
 
+        // 404
         return ResponseEntity
                 .status(HttpStatus.NOT_FOUND)
                 .body(response);
@@ -27,11 +34,33 @@ public class GlobalExceptionHandler {
 
         ErrorResponse response = new ErrorResponse(ex.getErrorCode(), ex.getMessage());
 
+        // 400
         return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)
                 .body(response);
     }
-    // バリデーション例外を追加
+
+    // バリデーション例外
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<ValidationErrorResponse> handleValidation(
+            MethodArgumentNotValidException ex) {
+
+        // 発生したバリデーションエラーを取得しリスト化
+        List<FieldValidationError> errors = ex.getBindingResult()
+                .getFieldErrors()
+                .stream()
+                .map(error -> new FieldValidationError(
+                        error.getField(),
+                        error.getDefaultMessage()))
+                .toList();
+
+        ValidationErrorResponse response = new ValidationErrorResponse("VALIDATION_ERROR", errors);
+
+        // 400
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(response);
+    }
 
     // どれにも該当しない場合
     @ExceptionHandler(Exception.class)
@@ -39,6 +68,7 @@ public class GlobalExceptionHandler {
 
         ErrorResponse response = new ErrorResponse("SYSTEM_ERROR", "Unexpected error occurred");
 
+        // 500
         return ResponseEntity
                 .status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .body(response);
