@@ -7,10 +7,8 @@ import java.util.List;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
-import com.example.engineary.DTO.DiaryEntryRequest;
-import com.example.engineary.DTO.DiaryEntryResponse;
-import com.example.engineary.mapper.DiaryEntryMappar;
-import com.example.engineary.model.DiaryEntry;
+import com.example.engineary.dto.DiaryEntryRequest;
+import com.example.engineary.dto.DiaryEntryResponse;
 import com.example.engineary.service.DiaryEntryService;
 
 import jakarta.validation.Valid;
