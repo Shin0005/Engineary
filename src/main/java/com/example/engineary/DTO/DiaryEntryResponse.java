@@ -1,5 +1,7 @@
 package com.example.engineary.dto;
 
+import java.time.LocalDate;
+
 import lombok.Data;
 
 /**
@@ -21,5 +23,5 @@ public class DiaryEntryResponse {
     private Double workedTime;
 
     /** 作業日時 デフォルトで当日 */
-    private String workedDate;
+    private LocalDate workedDate;
 }

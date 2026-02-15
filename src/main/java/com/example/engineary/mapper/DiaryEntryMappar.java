@@ -1,7 +1,5 @@
 package com.example.engineary.mapper;
 
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -19,20 +17,13 @@ public class DiaryEntryMappar {
      * 
      * @param req DiaryEntryRequest
      */
-    public static DiaryEntry toEntity(DiaryEntryRequest req) {
-        // controllerではじく前提なので必要ないかも
-        if (req == null) {
-            return null;
-        }
-
+    public static DiaryEntry toEntity(DiaryEntryRequest request) {
         DiaryEntry entity = new DiaryEntry();
 
-        entity.setTitle(req.getTitle());
-        entity.setContents(req.getContents());
-        entity.setWorkedTime(Double.valueOf(req.getWorkedTime()));
-        // String(YYYY-MM-DD)からLocalDate変換
-        entity.setWorkedDate(LocalDate.parse(req.getWorkedDate(),
-                DateTimeFormatter.ofPattern("yyyy-MM-dd")));
+        entity.setTitle(request.getTitle());
+        entity.setContents(request.getContents());
+        entity.setWorkedTime(Double.valueOf(request.getWorkedTime()));
+        entity.setWorkedDate(request.getWorkedDate());
         return entity;
     }
 
@@ -43,20 +34,15 @@ public class DiaryEntryMappar {
      * @return DiaryEntryResponse
      */
     public static DiaryEntryResponse toResponse(DiaryEntry entity) {
-        // dbから取得したentityなのでおそらく必要ない。
-        if (entity == null) {
-            return null;
-        }
-        DiaryEntryResponse res = new DiaryEntryResponse();
-        res.setId(entity.getId());
-        res.setTitle(entity.getTitle());
-        res.setContents(entity.getContents());
-        res.setWorkedTime(entity.getWorkedTime());
-        // LocalDateをString(YYYY/MM/DD)に変換
-        res.setWorkedDate(entity.getWorkedDate()
-                .format(DateTimeFormatter.ofPattern("yyyy/MM/dd")));
+        DiaryEntryResponse response = new DiaryEntryResponse();
 
-        return res;
+        response.setId(entity.getId());
+        response.setTitle(entity.getTitle());
+        response.setContents(entity.getContents());
+        response.setWorkedTime(entity.getWorkedTime());
+        response.setWorkedDate(entity.getWorkedDate());
+
+        return response;
     }
 
     /**
