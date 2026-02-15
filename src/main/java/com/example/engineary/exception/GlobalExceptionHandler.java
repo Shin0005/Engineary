@@ -18,69 +18,68 @@ import org.springframework.web.servlet.NoHandlerFoundException;
  */
 @RestControllerAdvice
 public class GlobalExceptionHandler {
-    // 業務エラー
-    @ExceptionHandler(ResourceNotFoundException.class)
-    public ResponseEntity<ErrorResponse> handleResourceNotFoundException(ResourceNotFoundException ex) {
+        // 業務エラー
+        @ExceptionHandler(ResourceNotFoundException.class)
+        public ResponseEntity<ErrorResponse> handleResourceNotFoundException(ResourceNotFoundException ex) {
 
-        ErrorResponse response = new ErrorResponse(ex.getErrorCode(), ex.getMessage());
+                ErrorResponse response = new ErrorResponse(ex.getErrorCode(), ex.getMessage());
 
-        // 404
-        return ResponseEntity
-                .status(HttpStatus.NOT_FOUND)
-                .body(response);
-    }
-
-    @ExceptionHandler(BusinessException.class)
-    public ResponseEntity<ErrorResponse> handleBusinessException(BusinessException ex) {
-
-        ErrorResponse response = new ErrorResponse(ex.getErrorCode(), ex.getMessage());
-
-        // 400
-        return ResponseEntity
-                .status(HttpStatus.BAD_REQUEST)
-                .body(response);
-    }
-
-    // バリデーション例外
-    @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<ValidationErrorResponse> handleValidation(
-            MethodArgumentNotValidException ex) {
-
-        // 発生したバリデーションエラーを取得しリスト化
-        List<FieldValidationError> errors = ex.getBindingResult()
-                .getFieldErrors()
-                .stream()
-                .map(error -> new FieldValidationError(
-                        error.getField(),
-                        error.getDefaultMessage()))
-                .toList();
-
-        ValidationErrorResponse response = new ValidationErrorResponse("VALIDATION_ERROR", errors);
-
-        // 400
-        return ResponseEntity
-                .status(HttpStatus.BAD_REQUEST)
-                .body(response);
-    }
-    @ExceptionHandler(NoHandlerFoundException.class)
-        public ResponseEntity<?> handle404(NoHandlerFoundException ex) {
-
-        ErrorResponse response = new ErrorResponse("NOT_FOUND", "URL not found");        
-        return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                .body(response);
+                // 404
+                return ResponseEntity
+                                .status(HttpStatus.NOT_FOUND)
+                                .body(response);
         }
 
+        @ExceptionHandler(BusinessException.class)
+        public ResponseEntity<ErrorResponse> handleBusinessException(BusinessException ex) {
 
-    
-    // どれにも該当しない場合
-    @ExceptionHandler(Exception.class)
-    public ResponseEntity<ErrorResponse> handleSystemException(Exception ex) {
+                ErrorResponse response = new ErrorResponse(ex.getErrorCode(), ex.getMessage());
 
-        ErrorResponse response = new ErrorResponse("SYSTEM_ERROR", "Unexpected error occurred");
+                // 400
+                return ResponseEntity
+                                .status(HttpStatus.BAD_REQUEST)
+                                .body(response);
+        }
 
-        // 500
-        return ResponseEntity
-                .status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body(response);
-    }
+        // バリデーション例外
+        @ExceptionHandler(MethodArgumentNotValidException.class)
+        public ResponseEntity<ValidationErrorResponse> handleValidation(
+                        MethodArgumentNotValidException ex) {
+
+                // 発生したバリデーションエラーを取得しリスト化
+                List<FieldValidationError> errors = ex.getBindingResult()
+                                .getFieldErrors()
+                                .stream()
+                                .map(error -> new FieldValidationError(
+                                                error.getField(),
+                                                error.getDefaultMessage()))
+                                .toList();
+
+                ValidationErrorResponse response = new ValidationErrorResponse("VALIDATION_ERROR", errors);
+
+                // 400
+                return ResponseEntity
+                                .status(HttpStatus.BAD_REQUEST)
+                                .body(response);
+        }
+
+        @ExceptionHandler(NoHandlerFoundException.class)
+        public ResponseEntity<?> handle404(NoHandlerFoundException ex) {
+
+                ErrorResponse response = new ErrorResponse("NOT_FOUND", "URL not found");
+                return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                                .body(response);
+        }
+
+        // どれにも該当しない場合
+        @ExceptionHandler(Exception.class)
+        public ResponseEntity<ErrorResponse> handleSystemException(Exception ex) {
+
+                ErrorResponse response = new ErrorResponse("SYSTEM_ERROR", "Unexpected error occurred");
+
+                // 500
+                return ResponseEntity
+                                .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                                .body(response);
+        }
 }

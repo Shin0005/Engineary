@@ -4,7 +4,10 @@ import java.time.LocalDateTime;
 
 /**
  * 例外用レスポンスクラス<br>
- * フロントに返すデータ形式
+ * field:<br>
+ * String errorCode<br>
+ * String message<br>
+ * LocalDateTime timestamp<br>
  */
 public class ErrorResponse {
     private final String errorCode;
