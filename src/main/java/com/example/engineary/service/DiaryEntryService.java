@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 
 import com.example.engineary.dto.DiaryEntryRequest;
 import com.example.engineary.dto.DiaryEntryResponse;
+
 import com.example.engineary.exception.ResourceNotFoundException;
 import com.example.engineary.mapper.DiaryEntryMappar;
 import com.example.engineary.model.DiaryEntry;
@@ -65,6 +66,7 @@ public class DiaryEntryService {
 
     // delete
     public void deleteDiaryEntry(Long id) {
+
         // エラーを明確に出すためにfind->delete
         diaryEntryRepository.findById(id)
                 .ifPresentOrElse(diaryEntryRepository::delete,

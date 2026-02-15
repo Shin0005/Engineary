@@ -12,6 +12,7 @@ import com.example.engineary.dto.DiaryEntryResponse;
 import com.example.engineary.service.DiaryEntryService;
 
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 
 /**
  * 日誌機能コントローラ
@@ -58,7 +59,7 @@ public class DiaryEntryController {
      */
     @PutMapping("/{id}")
     public ResponseEntity<Void> updateDiaryEntry(
-            @PathVariable Long id,
+            @NotNull @PathVariable Long id,
             @Valid @RequestBody DiaryEntryRequest request) {
 
         diaryEntryService.updateDiaryEntry(id, request);
@@ -75,7 +76,7 @@ public class DiaryEntryController {
      * @param id 日誌Id
      */
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteDiaryEntry(@PathVariable Long id) {
+    public ResponseEntity<Void> deleteDiaryEntry(@NotNull @PathVariable Long id) {
 
         diaryEntryService.deleteDiaryEntry(id);
         return ResponseEntity.noContent().build();
