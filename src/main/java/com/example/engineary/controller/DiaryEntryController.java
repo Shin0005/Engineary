@@ -22,7 +22,6 @@ public class DiaryEntryController {
 
     private final DiaryEntryService diaryEntryService;
 
-    // DI(autowiredは１コンストラクタの時省略可)
     public DiaryEntryController(DiaryEntryService diaryEntryService) {
         this.diaryEntryService = diaryEntryService;
     }
@@ -33,7 +32,7 @@ public class DiaryEntryController {
     @GetMapping
     public ResponseEntity<List<DiaryEntryResponse>> getAllEntries() {
         List<DiaryEntryResponse> responses = diaryEntryService.getAllEntries();
-        
+
         return ResponseEntity.ok(responses);
     }
 
@@ -63,10 +62,10 @@ public class DiaryEntryController {
             @Valid @RequestBody DiaryEntryRequest request) {
 
         diaryEntryService.updateDiaryEntry(id, request);
-        
+
         return ResponseEntity.ok().build();
         // eをどう使う。
-        //return ResponseEntity.notFound().build();
+        // return ResponseEntity.notFound().build();
     }
 
     /**
@@ -77,12 +76,12 @@ public class DiaryEntryController {
      */
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteDiaryEntry(@PathVariable Long id) {
-        
+
         diaryEntryService.deleteDiaryEntry(id);
         return ResponseEntity.noContent().build();
 
-        //    return ResponseEntity.notFound().build();
-        
+        // return ResponseEntity.notFound().build();
+
     }
 
 }
