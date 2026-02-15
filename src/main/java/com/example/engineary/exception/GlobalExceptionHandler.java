@@ -10,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.NoHandlerFoundException;
 
 /**
  * 例外ハンドルクラス<br>
@@ -61,7 +62,16 @@ public class GlobalExceptionHandler {
                 .status(HttpStatus.BAD_REQUEST)
                 .body(response);
     }
+    @ExceptionHandler(NoHandlerFoundException.class)
+        public ResponseEntity<?> handle404(NoHandlerFoundException ex) {
 
+        ErrorResponse response = new ErrorResponse("NOT_FOUND", "URL not found");        
+        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                .body(response);
+        }
+
+
+    
     // どれにも該当しない場合
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResponse> handleSystemException(Exception ex) {
