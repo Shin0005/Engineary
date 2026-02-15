@@ -41,6 +41,18 @@ public class GlobalExceptionHandler {
                                 .body(response);
         }
 
+        // リクエストNULL例外
+        @ExceptionHandler(RequestIsNullException.class)
+        public ResponseEntity<ErrorResponse> RequestIsNullException(RequestIsNullException ex) {
+
+                ErrorResponse response = new ErrorResponse(ex.getErrorCode(), ex.getMessage());
+
+                // 400
+                return ResponseEntity
+                                .status(HttpStatus.BAD_REQUEST)
+                                .body(response);
+        }
+
         // バリデーション例外
         @ExceptionHandler(MethodArgumentNotValidException.class)
         public ResponseEntity<ValidationErrorResponse> handleValidation(
