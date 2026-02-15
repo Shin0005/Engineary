@@ -14,6 +14,7 @@ import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.NoHandlerFoundException;
+import org.springframework.web.servlet.resource.NoResourceFoundException;
 
 /**
  * 例外ハンドルクラス<br>
@@ -73,9 +74,9 @@ public class GlobalExceptionHandler {
                                 .body(response);
         }
 
-        // 不正なURIの時
-        @ExceptionHandler(NoHandlerFoundException.class)
-        public ResponseEntity<ErrorResponse> handleUriNotFoundException(NoHandlerFoundException ex) {
+        // 不正なURIの時 どちらの例外の可能性もある
+        @ExceptionHandler({ NoResourceFoundException.class, NoHandlerFoundException.class })
+        public ResponseEntity<ErrorResponse> handleUriNotFoundException(Exception ex) {
                 log.warn("URI not found: {}", ex.getMessage());
 
                 ErrorResponse response = new ErrorResponse("NOT_FOUND", "URL not found");
