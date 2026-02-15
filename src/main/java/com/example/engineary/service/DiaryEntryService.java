@@ -3,12 +3,10 @@ package com.example.engineary.service;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.MethodArgumentNotValidException;
 
 import com.example.engineary.dto.DiaryEntryRequest;
 import com.example.engineary.dto.DiaryEntryResponse;
-import com.example.engineary.exception.BusinessException;
-import com.example.engineary.exception.RequestIsNullException;
+
 import com.example.engineary.exception.ResourceNotFoundException;
 import com.example.engineary.mapper.DiaryEntryMappar;
 import com.example.engineary.model.DiaryEntry;
@@ -41,9 +39,7 @@ public class DiaryEntryService {
 
     // create requestで受け取り、entityでDB処理、responseで返却
     public DiaryEntryResponse createDiaryEntry(DiaryEntryRequest request) {
-        if (request == null) {
-            throw new RequestIsNullException();
-        }
+
         DiaryEntry inputEntity = DiaryEntryMappar.toEntity(request);
         DiaryEntry outputEntity = diaryEntryRepository.save(inputEntity);
 
@@ -54,9 +50,6 @@ public class DiaryEntryService {
 
     // update
     public void updateDiaryEntry(Long id, DiaryEntryRequest request) {
-        if (request == null || id == null) {
-            throw new RequestIsNullException();
-        }
         DiaryEntry entry = diaryEntryRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException(id));
 
@@ -73,9 +66,7 @@ public class DiaryEntryService {
 
     // delete
     public void deleteDiaryEntry(Long id) {
-        if (id == null) {
-            throw new RequestIsNullException();
-        }
+
         // エラーを明確に出すためにfind->delete
         diaryEntryRepository.findById(id)
                 .ifPresentOrElse(diaryEntryRepository::delete,
