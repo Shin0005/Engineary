@@ -26,6 +26,6 @@ public class DiaryEntryRequest {
     private Integer workedTime;
 
     /** 作業日時 */
-    @NotBlank
+    @NotNull
     private LocalDate workedDate;
 }
