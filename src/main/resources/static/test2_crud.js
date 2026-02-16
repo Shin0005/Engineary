@@ -145,13 +145,20 @@ async function apiFetch(url, { method = 'GET', headers = {}, body = null }) {
         //呼び出し元にerror投げる
         throw new Error("Network Error");
     }
-
-    //http系エラー 後で番号で分岐
+    //http系エラー toastで通知
     if (!response.ok) {
+        //toast
+        let msg = "予期せぬエラーです";
+        if (response.status === 400) msg = "入力内容に誤りがあります。";
+        if (response.status === 404) msg = "通信先が見つかりません";
+        if (response.status >= 500) msg = "サーバーで障害が起きています";
+        showNotify(msg, "error");
+        //コンソール
         const error = new Error("HttpError");
         error.status = response.status;
         throw error;
     }
+    showNotify("成功しました", "success");
     const contentType = response.headers.get('content-type');
     // bodyなし
     if (!contentType) {
