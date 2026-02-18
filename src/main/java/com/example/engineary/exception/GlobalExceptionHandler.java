@@ -1,20 +1,16 @@
 package com.example.engineary.exception;
 
-import com.example.engineary.dto.ErrorResponse;
-import com.example.engineary.dto.FieldValidationError;
-import com.example.engineary.dto.ValidationErrorResponse;
-
 import java.util.List;
+import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.http.ProblemDetail;
 import org.springframework.web.bind.MethodArgumentNotValidException;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.NoHandlerFoundException;
-import org.springframework.web.servlet.resource.NoResourceFoundException;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.server.ResponseStatusException;
 
 /**
  * 例外ハンドルクラス<br>
@@ -27,87 +23,58 @@ public class GlobalExceptionHandler {
 
         // DBにリソースがない場合
         @ExceptionHandler(ResourceNotFoundException.class)
-        public ResponseEntity<ErrorResponse> handleResourceNotFoundException(ResourceNotFoundException ex) {
+        public ProblemDetail handleResourceNotFoundException(ResourceNotFoundException ex) {
                 log.warn("Resource not found: {}", ex.getMessage());
 
-                ErrorResponse response = new ErrorResponse(ex.getErrorCode(), ex.getMessage());
+                // 404 and message="Resource not found. id ={$id}"
+                ProblemDetail detail = ProblemDetail.forStatusAndDetail(HttpStatus.NOT_FOUND, ex.getMessage());
 
-                // 404
-                return ResponseEntity
-                                .status(HttpStatus.NOT_FOUND)
-                                .body(response);
-        }
-
-        // 業務エラー
-        @ExceptionHandler(BusinessException.class)
-        public ResponseEntity<ErrorResponse> handleBusinessException(BusinessException ex) {
-                log.warn("Request is wrong: {}", ex.getMessage());
-
-                ErrorResponse response = new ErrorResponse(ex.getErrorCode(), ex.getMessage());
-
-                // 400
-                return ResponseEntity
-                                .status(HttpStatus.BAD_REQUEST)
-                                .body(response);
+                return detail;
         }
 
         // バリデーション例外
         @ExceptionHandler(MethodArgumentNotValidException.class)
-        public ResponseEntity<ValidationErrorResponse> handleValidationException(
-                        MethodArgumentNotValidException ex) {
+        public ProblemDetail handleValidationException(MethodArgumentNotValidException ex) {
 
-                log.warn("Validation Failed: {}", ex.getMessage());
-                // 発生したバリデーションエラーを取得しリスト化
-                List<FieldValidationError> errors = ex.getBindingResult()
+                // "Validation failed for argument []...
+                log.warn(ex.getMessage());
+
+                // 400
+                ProblemDetail detail = ProblemDetail.forStatusAndDetail(
+                                HttpStatus.BAD_REQUEST,
+                                "Your request parameters are invalid.");
+
+                // 発生したバリデーションエラーを取得しリストしてdetailに保存
+                List<Map<String, String>> errors = ex.getBindingResult()
                                 .getFieldErrors()
                                 .stream()
-                                .map(error -> new FieldValidationError(
-                                                error.getField(),
-                                                error.getDefaultMessage()))
+                                .map(error -> Map.of(
+                                                "field", error.getField(),
+                                                "reason", error.getDefaultMessage()))
                                 .toList();
 
-                ValidationErrorResponse response = new ValidationErrorResponse("VALIDATION_ERROR", errors);
+                detail.setProperty("errors", errors);
 
-                // 400
-                return ResponseEntity
-                                .status(HttpStatus.BAD_REQUEST)
-                                .body(response);
+                return detail;
         }
 
-        // 不正なURIの時 どちらの例外の可能性もある
-        @ExceptionHandler({ NoResourceFoundException.class, NoHandlerFoundException.class })
-        public ResponseEntity<ErrorResponse> handleUriNotFoundException(Exception ex) {
-                log.warn("URI not found: {}", ex.getMessage());
+        // 標準的なhttpStatusを持つ例外を自動ハンドル（ResponseStatusExceptionを継承した例外）
 
-                ErrorResponse response = new ErrorResponse("NOT_FOUND", "URL not found");
-                // 404
-                return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                                .body(response);
+        @ExceptionHandler(ResponseStatusException.class)
+        public ProblemDetail handleResponseStatusException(ResponseStatusException ex) {
+                log.warn(ex.getMessage());
+
+                // 例外が持っているステータスコードをそのまま利用
+                return ProblemDetail.forStatusAndDetail(ex.getStatusCode(), ex.getReason());
         }
 
-        // リクエストのデータ型が不正な場合(jacksonでの例外をキャッチ)
-        // bodyがnullのとき、bodyがrequestにない時をキャッチ
-        @ExceptionHandler(HttpMessageNotReadableException.class)
-        public ResponseEntity<ErrorResponse> handle(HttpMessageNotReadableException ex) {
-                log.warn("Invalid request body: {}", ex.getMessage());
-
-                ErrorResponse response = new ErrorResponse("INVALID_REQUEST", "入力形式が不正です");
-                // 400
-                return ResponseEntity
-                                .status(HttpStatus.BAD_REQUEST)
-                                .body(response);
-        }
-
-        // どれにも該当しない場合
+        // 予期せぬ例外（500）
         @ExceptionHandler(Exception.class)
-        public ResponseEntity<ErrorResponse> handleSystemException(Exception ex) {
-                log.error("Unexpected error occurred", ex);
+        public ProblemDetail handleSystemException(Exception ex) {
+                // stacktraceを出す
+                log.error("Unexpected system error", ex);
 
-                ErrorResponse response = new ErrorResponse("SYSTEM_ERROR", "Unexpected error occurred");
-
-                // 500
-                return ResponseEntity
-                                .status(HttpStatus.INTERNAL_SERVER_ERROR)
-                                .body(response);
+                return ProblemDetail.forStatusAndDetail(HttpStatus.INTERNAL_SERVER_ERROR,
+                                "An unexpected error occurred");
         }
 }

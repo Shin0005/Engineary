@@ -6,15 +6,7 @@ package com.example.engineary.exception;
  */
 public abstract class BusinessException extends RuntimeException {
 
-    private final String errorCode;
-
-    protected BusinessException(String errorCode, String message) {
+    protected BusinessException(String message) {
         super(message);
-        this.errorCode = errorCode;
     }
-
-    public String getErrorCode() {
-        return errorCode;
-    }
-
 }
