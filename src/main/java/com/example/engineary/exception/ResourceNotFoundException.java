@@ -7,6 +7,6 @@ package com.example.engineary.exception;
 public class ResourceNotFoundException extends BusinessException {
 
     public ResourceNotFoundException(Long id) {
-        super("RESOURCE_NOT_FOUND", "Resource not found. id=" + id);
+        super("Resource not found. id=" + id);
     }
 }
