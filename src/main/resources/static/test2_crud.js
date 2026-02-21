@@ -38,8 +38,7 @@ async function loadDiary() {
 
 
     } catch (error) {
-        console.error("ErrorMessage: " + error.message);
-        //画面にも表示失敗した旨を表示したい。
+        console.error(error.status + " " + error.name + ": " + error.message);
     }
 }
 
@@ -99,8 +98,10 @@ async function editDiaryEntry(url, method) {
 
         await loadDiary();
     } catch (error) {
-        console.error("ErrorMessage: " + error.message);
-        //画面にも表示失敗した旨を表示したい。
+        console.error(error.status + " " + error.name + ": " + error.message);
+        error.errors?.forEach(err => {
+            console.error(`${err.field}: ${err.reason}`);
+        });
     }
 }
 
@@ -114,8 +115,7 @@ async function deleteDiaryEntry(id) {
         await loadDiary();
 
     } catch (error) {
-        console.error("ErrorMessage: " + error.message);
-        //画面にも表示失敗した旨を表示したい。
+        console.error(error.status + " " + error.name + ": " + error.message);
     }
 }
 
@@ -145,30 +145,64 @@ async function apiFetch(url, { method = 'GET', headers = {}, body = null }) {
         //呼び出し元にerror投げる
         throw new Error("Network Error");
     }
+
     //http系エラー toastで通知
     if (!response.ok) {
         //toast
-        let msg = "予期せぬエラーです";
-        if (response.status === 400) msg = "入力内容に誤りがあります。";
-        if (response.status === 404) msg = "通信先が見つかりません";
-        if (response.status >= 500) msg = "サーバーで障害が起きています";
+        let msg;
+        switch (response.status) {
+            case 400:
+                msg = "入力内容に誤りがあります。";
+                break;
+            case 404:
+                msg = "通信先が見つかりません";
+                break;
+            default:
+                msg = "サーバーで障害が起きています";
+        }
         showNotify(msg, "error");
         //コンソール
+
+
+        const errorDetail = await response.json();
+        console.log(errorDetail);
         const error = new Error("HttpError");
-        error.status = response.status;
+        error.status = errorDetail.status;
+        error.message = errorDetail.detail;
+        error.name = errorDetail.title;
+        error.errors = errorDetail.errors;
         throw error;
     }
-    showNotify("成功しました", "success");
+    // 成功時メッセージ
+    let message;
+    switch (method) {
+        case 'POST':
+            message = "作成が成功しました";
+            break;
+        case 'DELETE':
+            message = "削除に成功しました";
+            break;
+        case 'PUT':
+            message = "更新に成功しました"
+            break;
+        case 'GET':
+            break;
+    }
+    if (method != 'GET') {
+        showNotify(message, "success");
+    }
+
     const contentType = response.headers.get('content-type');
-    // bodyなし
+
     if (!contentType) {
-        return;
+        return; // bodyなし
     } else if (contentType.includes('application/json')) {
         return await response.json();
     }
     return await response.text();
 
 }
+
 //formのvalidation
 function validForm() {
     let validFlg = true;
