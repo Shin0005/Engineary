@@ -1,5 +1,6 @@
+// モーダル関連処理
 const modal = document.getElementById("diaryModal");
-//モーダルを閉じるタイミングの処理
+// モーダルを閉じるタイミングの処理
 modal.addEventListener("hidden.bs.modal", () => {
     const form = document.getElementById('diary-form');
 
@@ -14,11 +15,12 @@ modal.addEventListener("hidden.bs.modal", () => {
     delete modal.dataset.currentId;
 });
 
-//モーダルを開けたタイミングの処理
+// モーダルを開けたタイミングの処理
 modal.addEventListener("show.bs.modal", (event) => {
     const button = event.relatedTarget;
     const mode = button.getAttribute("data-mode");
 
+    //モーダルの値を初期化
     const titleInput = document.getElementById('diary-title');
     const contentsInput = document.getElementById('diary-contents');
     const timeInput = document.getElementById('diary-workedTime');
@@ -36,7 +38,7 @@ modal.addEventListener("show.bs.modal", (event) => {
         titleInput.value = button.getAttribute("data-title");
         contentsInput.value = button.getAttribute("data-contents");
         timeInput.value = button.getAttribute("data-time");
-        //DateOBJに変換してから代入
+        // DateOBJに変換してから代入
         const rawDateObj = new Date(button.getAttribute("data-date"));
         const formattedDate = rawDateObj.toLocaleDateString('sv-SE');
         dateInput.value = formattedDate;

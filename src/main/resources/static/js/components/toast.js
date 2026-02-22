@@ -1,4 +1,5 @@
-function showNotify(message, type = 'success') {
+// toast表示関数
+export function showNotify(message, type = 'success') {
   const toastBox = document.getElementById('toast-box');
   const toastMessage = document.getElementById('toast-message');
   
