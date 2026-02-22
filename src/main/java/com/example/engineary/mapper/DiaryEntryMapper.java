@@ -11,7 +11,7 @@ import com.example.engineary.model.DiaryEntry;
 /**
  * 入出力処理用DTOとEntity(DiaryEntry)のMapper
  */
-public class DiaryEntryMappar {
+public class DiaryEntryMapper {
     /**
      * Request -> Entity の変換メソッド
      * 

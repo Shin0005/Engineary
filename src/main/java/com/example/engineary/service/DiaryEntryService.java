@@ -8,7 +8,7 @@ import com.example.engineary.dto.DiaryEntryRequest;
 import com.example.engineary.dto.DiaryEntryResponse;
 
 import com.example.engineary.exception.ResourceNotFoundException;
-import com.example.engineary.mapper.DiaryEntryMappar;
+import com.example.engineary.mapper.DiaryEntryMapper;
 import com.example.engineary.model.DiaryEntry;
 import com.example.engineary.repository.DiaryEntryRepository;
 
@@ -32,7 +32,7 @@ public class DiaryEntryService {
         // findByIdをしたいが、N+1問題なのでListを与えて一気に返してもらう
         // しかし返却地が巨大だとOOM → ページング導入? -> オーバースペック
         List<DiaryEntry> entities = diaryEntryRepository.findByIdIn(ids);
-        List<DiaryEntryResponse> responses = DiaryEntryMappar.toListResponse(entities);
+        List<DiaryEntryResponse> responses = DiaryEntryMapper.toListResponse(entities);
 
         return responses;
     }
@@ -40,10 +40,10 @@ public class DiaryEntryService {
     // create requestで受け取り、entityでDB処理、responseで返却
     public DiaryEntryResponse createDiaryEntry(DiaryEntryRequest request) {
 
-        DiaryEntry inputEntity = DiaryEntryMappar.toEntity(request);
+        DiaryEntry inputEntity = DiaryEntryMapper.toEntity(request);
         DiaryEntry outputEntity = diaryEntryRepository.save(inputEntity);
 
-        DiaryEntryResponse response = DiaryEntryMappar.toResponse(outputEntity);
+        DiaryEntryResponse response = DiaryEntryMapper.toResponse(outputEntity);
 
         return response;
     }
@@ -53,7 +53,7 @@ public class DiaryEntryService {
         DiaryEntry entry = diaryEntryRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException(id));
 
-        DiaryEntry entryDetails = DiaryEntryMappar.toEntity(request);
+        DiaryEntry entryDetails = DiaryEntryMapper.toEntity(request);
         entry.setTitle(entryDetails.getTitle());
         entry.setContents(entryDetails.getContents());
         entry.setWorkedTime(entryDetails.getWorkedTime());
