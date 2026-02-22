@@ -1,9 +1,10 @@
 import { apiFetch } from '../../apifetch.js';
+import { showNotify } from '../../components/toast.js'
 
 // selectAll
 export async function loadDiary() {
     try {
-        const entities = await apiFetch('/api/diary', { method: 'GET' });
+        const entities = await apiFetch('/api/diary', {});
 
         // tbody(diary-list)の取得
         const listElement = document.getElementById('diary-list');
@@ -34,7 +35,8 @@ export async function loadDiary() {
 
 
     } catch (error) {
-        console.error(error.status + " " + error.name + ": " + error.message);
+        showNotify('読み込みに失敗しました', 'error');
+        console.error(`${error.status} ${error.name}: ${error.message}`);
     }
 }
 
@@ -47,6 +49,7 @@ export async function editDiaryEntry(url, method) {
         workedTime: document.getElementById('diary-workedTime').value,
         workedDate: document.getElementById('diary-workedDate').value
     };
+
 
     try {
         await apiFetch(url, {
@@ -61,8 +64,14 @@ export async function editDiaryEntry(url, method) {
             modalInstance.hide();
         }
 
+        const msg = method === 'PUT' ? '日誌が更新されました' : '日誌が作成されました';
+        showNotify(msg)
+
         await loadDiary();
     } catch (error) {
+        const msg = method === 'PUT' ? '更新に失敗しました' : '作成に失敗しました';
+        showNotify(msg, 'error');
+
         console.error(error.status + " " + error.name + ": " + error.message);
         // 複数のフィールドでのエラーも表示
         error.errors?.forEach(err => {
@@ -80,9 +89,12 @@ export async function deleteDiaryEntry(id) {
 
         // 日誌再読み込み
         await loadDiary();
+        //toast通知
+        showNotify('削除に成功しました');
 
     } catch (error) {
-        console.error(error.status + " " + error.name + ": " + error.message);
+        showNotify('削除に失敗しました', 'error');
+        console.error(`${error.status} ${error.name}: ${error.message}`);
     }
 }
 
