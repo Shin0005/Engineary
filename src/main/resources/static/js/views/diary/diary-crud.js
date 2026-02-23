@@ -39,7 +39,7 @@ export async function loadDiary(page) {
 
     } catch (error) {
         showNotify('読み込みに失敗しました', 'error');
-        console.error(`${error.status} ${error.name}: ${error.message}`);
+        console.error(`${error.name}: ${error.message}`);
     }
 }
 
@@ -75,7 +75,7 @@ export async function editDiaryEntry(url, method) {
         const msg = method === 'PUT' ? '更新に失敗しました' : '作成に失敗しました';
         showNotify(msg, 'error');
 
-        console.error(error.status + " " + error.name + ": " + error.message);
+        console.error(`${error.name}: ${error.message}`);
         // 複数のフィールドでのエラーも表示
         error.errors?.forEach(err => {
             console.error(`${err.field}: ${err.reason}`);
@@ -97,7 +97,7 @@ export async function deleteDiaryEntry(id) {
 
     } catch (error) {
         showNotify('削除に失敗しました', 'error');
-        console.error(`${error.status} ${error.name}: ${error.message}`);
+        console.error(`${error.name}: ${error.message}`);
     }
 }
 
