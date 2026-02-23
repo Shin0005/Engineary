@@ -102,6 +102,36 @@
             </table>
           </div>
         </div>
+        <!-- ページングフッター -->
+        <nav aria-label="Page navigation" class="mt-4">
+          <div class="d-flex justify-content-center align-items-center gap-3">
+            <button
+              class="btn btn-outline-primary btn-sm px-3 invisible"
+              id="prev-page"
+            >
+              &laquo; 戻る
+            </button>
+
+            <div class="text-muted small fw-bold">
+              Page <span id="current-page">1</span> out of
+              <span id="total-pages">--</span>
+            </div>
+
+            <button
+              class="btn btn-outline-primary btn-sm px-3 invisible"
+              id="next-page"
+            >
+              次へ &raquo;
+            </button>
+          </div>
+
+          <div
+            class="text-center text-muted x-small mt-2"
+            style="font-size: 0.8rem"
+          >
+            Total: <span id="total-elements">0</span> entries
+          </div>
+        </nav>
       </section>
     </main>
     <!-- モーダル -->

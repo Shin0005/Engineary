@@ -35,7 +35,7 @@ export async function apiFetch(url, { method = 'GET', headers = {}, body = null 
 
     } catch (error) {
         // ネットワーク系エラー
-        if (!error.status) {
+        if (error instanceof TypeError) {
             // 通信不能を意味する独自のコード
             error.status = "000";
             error.name = "NetworkError";

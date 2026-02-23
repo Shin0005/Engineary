@@ -2,8 +2,9 @@ package com.example.engineary.controller;
 
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
@@ -29,10 +30,11 @@ public class DiaryEntryController {
 
     /**
      * 全項目取得メソッド
+     * ページング 10個ごと
      */
     @GetMapping
-    public ResponseEntity<List<DiaryEntryResponse>> getAllEntries() {
-        List<DiaryEntryResponse> responses = diaryEntryService.getAllEntries();
+    public ResponseEntity<Page<DiaryEntryResponse>> getAllEntries(@PageableDefault(size = 10) Pageable pageable) {
+        Page<DiaryEntryResponse> responses = diaryEntryService.getAllEntries(pageable);
 
         return ResponseEntity.ok(responses);
     }
@@ -44,7 +46,6 @@ public class DiaryEntryController {
      */
     @PostMapping
     public ResponseEntity<DiaryEntryResponse> createDiaryEntry(@Valid @RequestBody DiaryEntryRequest request) {
-        // request(dto)からentityに変換してcreate
         DiaryEntryResponse response = diaryEntryService.createDiaryEntry(request);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
@@ -65,8 +66,6 @@ public class DiaryEntryController {
         diaryEntryService.updateDiaryEntry(id, request);
 
         return ResponseEntity.ok().build();
-        // eをどう使う。
-        // return ResponseEntity.notFound().build();
     }
 
     /**
@@ -80,9 +79,6 @@ public class DiaryEntryController {
 
         diaryEntryService.deleteDiaryEntry(id);
         return ResponseEntity.noContent().build();
-
-        // return ResponseEntity.notFound().build();
-
     }
 
 }

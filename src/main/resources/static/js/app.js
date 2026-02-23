@@ -1,11 +1,14 @@
 import { loadDiary, editDiaryEntry, deleteDiaryEntry } from './views/diary/diary-crud.js';
 import { validForm } from './views/diary/diary-validator.js';
 import './components/modal.js';
+import { updatePaginationUI } from './components/pagination.js';
 
 console.log("REST API 連携の準備ができました。");
+
+let currentPage = 0;
 // サイト読み込み時に日誌一覧取得
 window.onload = function () {
-    loadDiary();
+    refreshDiary(currentPage);
 };
 
 // ボタンイベント初期化
@@ -38,9 +41,40 @@ document.addEventListener('DOMContentLoaded', () => {
             deleteDiaryEntry(id);
         }
     });
+
+
+    // ページングのイベント登録
+    // 前へボタン
+    const prevBtn = document.getElementById("prev-page");
+    prevBtn.addEventListener('click', () => {
+        refreshDiary(currentPage - 1)
+    })
+    // 次へボタン
+    const nextBtn = document.getElementById("next-page");
+    nextBtn.addEventListener('click', () => {
+        refreshDiary(currentPage + 1);
+    })
+
 });
 
+// ページング処理
+export async function refreshDiary(page = 0) {
+    currentPage = page;
 
+    const pageData = await loadDiary(currentPage);
+
+    // 現在のページが空かつ現在のページが最初ではない場合にひとつ前のページに戻る
+    if (pageData.content.length === 0 && page > 0) {
+        await refreshDiary(currentPage - 1);
+        return;
+    }
+    // ボタンの状態を更新
+    updatePaginationUI(pageData.page);
+}
+
+export function getCurrentPage() {
+    return currentPage;
+}
 
 
 
