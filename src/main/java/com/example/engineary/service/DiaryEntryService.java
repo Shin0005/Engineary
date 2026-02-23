@@ -1,7 +1,7 @@
 package com.example.engineary.service;
 
-import java.util.List;
-
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.example.engineary.dto.DiaryEntryRequest;
@@ -25,19 +25,15 @@ public class DiaryEntryService {
 
     // selectAll
     @Transactional
-    public List<DiaryEntryResponse> getAllEntries() {
-        // OOMの可能性、findID->findbyIDのtransactionに変更
-        List<Long> ids = diaryEntryRepository.findIdList();
-
-        // findByIdをしたいが、N+1問題なのでListを与えて一気に返してもらう
-        // しかし返却地が巨大だとOOM → ページング導入? -> オーバースペック
-        List<DiaryEntry> entities = diaryEntryRepository.findByIdIn(ids);
-        List<DiaryEntryResponse> responses = DiaryEntryMapper.toListResponse(entities);
+    public Page<DiaryEntryResponse> getAllEntries(Pageable pageable) {
+        // ページング 10個ごと
+        Page<DiaryEntry> entities = diaryEntryRepository.findAll(pageable);
+        Page<DiaryEntryResponse> responses = entities.map(DiaryEntryMapper::toResponse);
 
         return responses;
     }
 
-    // create requestで受け取り、entityでDB処理、responseで返却
+    // create
     public DiaryEntryResponse createDiaryEntry(DiaryEntryRequest request) {
 
         DiaryEntry inputEntity = DiaryEntryMapper.toEntity(request);
