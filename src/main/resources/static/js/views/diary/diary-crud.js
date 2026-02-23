@@ -1,16 +1,17 @@
 import { apiFetch } from '../../apifetch.js';
 import { showNotify } from '../../components/toast.js'
+import { refreshDiary, getCurrentPage } from '../../app.js';
 
 // selectAll
-export async function loadDiary() {
+export async function loadDiary(page) {
     try {
-        const entities = await apiFetch('/api/diary', {});
+        const response = await apiFetch(`/api/diary?page=${page}`, {});
 
         // tbody(diary-list)の取得
         const listElement = document.getElementById('diary-list');
         // 初期化して、取得したentitiesを代入
         listElement.innerHTML = '';
-        entities.forEach(entity => {
+        response.content.forEach(entity => {
             const row = `
                 <tr>
                     <td>${entity.workedDate}</td>
@@ -32,6 +33,8 @@ export async function loadDiary() {
                 </tr>`;
             listElement.insertAdjacentHTML('beforeend', row);
         })
+        // ページ情報返却
+        return response;
 
 
     } catch (error) {
@@ -67,7 +70,7 @@ export async function editDiaryEntry(url, method) {
         const msg = method === 'PUT' ? '日誌が更新されました' : '日誌が作成されました';
         showNotify(msg)
 
-        await loadDiary();
+        await refreshDiary(getCurrentPage());
     } catch (error) {
         const msg = method === 'PUT' ? '更新に失敗しました' : '作成に失敗しました';
         showNotify(msg, 'error');
@@ -88,7 +91,7 @@ export async function deleteDiaryEntry(id) {
         });
 
         // 日誌再読み込み
-        await loadDiary();
+        await refreshDiary(getCurrentPage());
         //toast通知
         showNotify('削除に成功しました');
 
