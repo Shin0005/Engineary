@@ -1,6 +1,6 @@
 import { loadDiary, editDiaryEntry, deleteDiaryEntry } from './views/diary/diary-crud.js';
 import { validForm } from './views/diary/diary-validator.js';
-import './components/modal.js';
+import { initModal } from './components/modal.js';
 import { updatePaginationUI } from './components/pagination.js';
 import { renderDiaryTable, hideDiaryModal } from './views/diary/diary-ui.js';
 import { showNotify } from './components/toast.js';
@@ -16,6 +16,8 @@ window.onload = function () {
 // ボタンイベント初期化
 // ページ表示 -> DOMtreeが読み込まれたらボタンにイベント追加
 document.addEventListener('DOMContentLoaded', () => {
+    // ***モーダルの初期化
+    initModal();
 
     // ***モーダルの保存ボタンクリックのイベント登録
     const saveForm = document.getElementById('diary-form');
