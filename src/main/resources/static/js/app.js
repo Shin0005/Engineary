@@ -16,6 +16,8 @@ window.onload = function () {
 // ボタンイベント初期化
 // ページ表示 -> DOMtreeが読み込まれたらボタンにイベント追加
 document.addEventListener('DOMContentLoaded', () => {
+    // ***モーダルの初期化
+    initModal();
 
     // ***モーダルの保存ボタンクリックのイベント登録
     const saveForm = document.getElementById('diary-form');
