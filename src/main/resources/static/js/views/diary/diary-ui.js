@@ -5,6 +5,14 @@
 export function renderDiaryTable(pageData) {
     // tbody(diary-list)の取得
     const listElement = document.getElementById('diary-list');
+    if (!listElement) return;
+
+    // pageDataまたはcontentが空だった場合
+    if (!pageData || !Array.isArray(pageData.content)) {
+        listElement.innerHTML = '<tr><td colspan="5" class="text-center">データの形式が正しくありません。</td></tr>';
+        return;
+    }
+
     // 初期化して、取得したentitiesを代入
     listElement.innerHTML = '';
     pageData.content.forEach(entity => {

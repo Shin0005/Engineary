@@ -20,27 +20,33 @@ document.addEventListener('DOMContentLoaded', () => {
     initModal();
 
     // ***モーダルの保存ボタンクリックのイベント登録
+    // 二重登録防止フラグ
+    let isSubmitting = false;
     const saveForm = document.getElementById('diary-form');
     saveForm.addEventListener('submit', async (event) => {
         // submitによって勝手にロードされるので妨害
         event.preventDefault();
+        if (isSubmitting) return;
 
         const id = document.getElementById('diaryModal').dataset.currentId;
 
         // formの入力チェック合格後にapi通信
         if (validForm() === true) {
+            const saveBtn = document.getElementById('diary-btn-save');
             try {
+                isSubmitting = true;
+                saveBtn.disabled = true;
                 await editDiaryEntry(id);
                 // modalを非表示
                 hideDiaryModal();
                 // toast表示
-                const msg = method === 'PUT' ? '日誌が更新されました' : '日誌が作成されました';
-                showNotify(msg)
+                const msg = id ? '日誌が更新されました' : '日誌が作成されました';
+                showNotify(msg);
                 // テーブルを表示
                 await refreshDiary(getCurrentPage());
 
             } catch (error) {
-                const msg = method === 'PUT' ? '更新に失敗しました' : '作成に失敗しました';
+                const msg = id ? '更新に失敗しました' : '作成に失敗しました';
                 showNotify(msg, 'error');
 
                 console.error(`${error.name}: ${error.message}`);
@@ -48,6 +54,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 error.errors?.forEach(err => {
                     console.error(`${err.field}: ${err.reason}`);
                 });
+            } finally {
+                isSubmitting = false;
+                saveBtn.disabled = false;
             }
         }
     });
