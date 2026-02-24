@@ -1,4 +1,13 @@
-// 引数から情報を取り出す(必要に合わせて加工)。取り出した情報をfetchに入れる。例外処理を行う。
+/**
+ * 共通APIフェッチ関数
+ * @param {string} url リクエストURL
+ * @param {Object} options fetchオプション
+ * @param {string} [options.method='GET'] HTTPメソッド
+ * @param {Object} [options.headers={}] 追加ヘッダー
+ * @param {Object|null} [options.body=null] リクエストボディ
+ * @returns {Promise<Object>} JSONレスポンス
+ * @throws {Error} HttpError or NetworkError
+ */
 export async function apiFetch(url, { method = 'GET', headers = {}, body = null }) {
     // 引数をfetch用に整理
     const config = {
