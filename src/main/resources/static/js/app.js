@@ -24,14 +24,11 @@ document.addEventListener('DOMContentLoaded', () => {
         event.preventDefault();
 
         const id = document.getElementById('diaryModal').dataset.currentId;
-        // IDがあればPUT、なければPOST
-        const method = id ? 'PUT' : 'POST';
-        const url = id ? `/api/diary/${id}` : '/api/diary';
 
         // formの入力チェック合格後にapi通信
         if (validForm() === true) {
             try {
-                await editDiaryEntry(url, method);
+                await editDiaryEntry(id);
                 // modalを非表示
                 hideDiaryModal();
                 // toast表示
@@ -76,7 +73,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
     });
-
 
     // ***ページングのイベント登録
     // 前へボタン

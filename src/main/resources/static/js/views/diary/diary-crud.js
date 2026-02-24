@@ -8,13 +8,16 @@ export async function loadDiary(page) {
 }
 
 // createAndupdateメソッド
-export async function editDiaryEntry(url, method) {
+export async function editDiaryEntry(id = null) {
     const data = {
         title: document.getElementById('diary-title').value,
         contents: document.getElementById('diary-contents').value,
         workedTime: document.getElementById('diary-workedTime').value,
         workedDate: document.getElementById('diary-workedDate').value
     };
+    // IDがあればPUT、なければPOST
+    const method = id ? 'PUT' : 'POST';
+    const url = id ? `/api/diary/${id}` : '/api/diary';
 
     await apiFetch(url, {
         method: method,
