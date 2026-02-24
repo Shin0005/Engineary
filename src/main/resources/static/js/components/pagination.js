@@ -1,3 +1,7 @@
+/**
+ * ページングUIの表示状態（ボタンの可視化、ページ番号）を更新する
+ * @param {Object} pageData ページング情報オブジェクト
+ */
 export function updatePaginationUI(pageData) {
     const currentSpan = document.getElementById('current-page');
     const totalSpan = document.getElementById('total-pages');

@@ -1,13 +1,22 @@
 import { apiFetch } from '../../apifetch.js';
 
-// selectAll
+/**
+ * 日誌一覧データを取得する
+ * @param {number} page  取得するページ番号
+ * @returns {Promise<Object>} ページング情報を含むレスポンス
+ */
 export async function loadDiary(page) {
     const response = await apiFetch(`/api/diary?page=${page}`, {});
     // ページ情報返却
     return response;
 }
 
-// createAndupdateメソッド
+/**
+ * 日誌の登録・更新を行う
+ * @param {string} url APIエンドポイント
+ * @param {string} method HTTPメソッド (POST または PUT)
+ * @returns {Promise<void>}
+ */
 export async function editDiaryEntry(id = null) {
     const data = {
         title: document.getElementById('diary-title').value,
@@ -25,7 +34,11 @@ export async function editDiaryEntry(id = null) {
     });
 }
 
-// deleteメソッド 
+/**
+ * 指定したIDの日誌を削除する
+ * @param {number|string} id 削除対象の日誌ID
+ * @returns {Promise<void>}
+ */
 export async function deleteDiaryEntry(id) {
     await apiFetch(`/api/diary/${id}`, {
         method: 'DELETE'

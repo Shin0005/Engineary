@@ -1,4 +1,8 @@
 // modal-formのvalidation
+/**
+ * Formのバリデーションを行う
+ * @returns {Boolean}
+ */
 export function validForm() {
     let validFlg = true;
 

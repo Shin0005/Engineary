@@ -88,7 +88,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
 });
 
-// ページング処理
+/**
+ * 指定ページの日誌データを再読み込みし、UIを更新する
+ * @param {number} [page=0] 読み込むページ番号
+ * @returns {Promise<void>}
+ */
 export async function refreshDiary(page = 0) {
     try {
         currentPage = page;

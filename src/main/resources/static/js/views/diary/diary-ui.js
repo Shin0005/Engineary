@@ -1,3 +1,7 @@
+/**
+ * 日誌一覧テーブルをレンダリングする
+ * @param {Object} pageData APIから取得したページングデータ
+ */
 export function renderDiaryTable(pageData) {
     // tbody(diary-list)の取得
     const listElement = document.getElementById('diary-list');
@@ -28,6 +32,9 @@ export function renderDiaryTable(pageData) {
 
 }
 
+/**
+ * 日誌入力モーダルを非表示にする
+ */
 export function hideDiaryModal() {
     // モーダルを閉じる処理を追加
     const modalElement = document.getElementById('diaryModal');

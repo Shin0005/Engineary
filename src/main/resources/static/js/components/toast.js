@@ -1,4 +1,9 @@
-// toast表示関数
+/**
+ * トーストにメッセージを表示させる
+ * 成功時と失敗時で表示が変化する
+ * @param {String} message 表示させたいメッセージ
+ * @param {String} type success or error
+ */
 export function showNotify(message, type = 'success') {
   const toastBox = document.getElementById('toast-box');
   const toastMessage = document.getElementById('toast-message');
@@ -6,7 +11,7 @@ export function showNotify(message, type = 'success') {
   // いったん色クラスをリセット
   toastBox.classList.remove('text-bg-success', 'text-bg-danger');
 
-  // タイプによって色を分岐
+  // タイプによって色を分岐s
   if (type === 'error') {
     toastBox.classList.add('text-bg-danger');
   } else {
