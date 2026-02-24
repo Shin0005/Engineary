@@ -24,7 +24,6 @@ export async function apiFetch(url, { method = 'GET', headers = {}, body = null 
         if (!response.ok) {
             // 呼び出し元にerrorをスロー
             const error = new Error("HttpError");
-            error.status = result.status;
             error.message = result.detail;
             error.name = result.title;
             error.errors = result.errors;
@@ -34,12 +33,6 @@ export async function apiFetch(url, { method = 'GET', headers = {}, body = null 
         return result;
 
     } catch (error) {
-        // ネットワーク系エラー
-        if (error instanceof TypeError) {
-            // 通信不能を意味する独自のコード
-            error.status = "000";
-            error.name = "NetworkError";
-        }
         // 呼び出し元にerror投げる
         throw error;
     }
