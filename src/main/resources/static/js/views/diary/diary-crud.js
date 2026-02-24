@@ -30,7 +30,6 @@ export async function deleteDiaryEntry(id) {
     await apiFetch(`/api/diary/${id}`, {
         method: 'DELETE'
     });
-    return;
 }
 
 
