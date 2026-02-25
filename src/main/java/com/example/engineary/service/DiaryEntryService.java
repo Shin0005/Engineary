@@ -54,8 +54,6 @@ public class DiaryEntryService {
         entry.setContents(entryDetails.getContents());
         entry.setWorkedTime(entryDetails.getWorkedTime());
         entry.setWorkedDate(entryDetails.getWorkedDate());
-        entry.setUpdatedAt(entryDetails.getUpdatedAt());
-        entry.setCreatedAt(entryDetails.getCreatedAt());
 
         diaryEntryRepository.save(entry);
     }
