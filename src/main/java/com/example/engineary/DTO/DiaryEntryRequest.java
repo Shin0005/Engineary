@@ -2,6 +2,7 @@ package com.example.engineary.dto;
 
 import java.time.LocalDate;
 
+import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -19,10 +20,12 @@ public class DiaryEntryRequest {
     private String title;
 
     /** 内容 */
+    @Size(max = 5000, message = "内容は5000文字以内で入力してください")
     private String contents;
 
     /** 作業時間 */
     @NotNull
+    @Max(value = 1440, message = "作業時間は1440分以内で入力してください")
     private Integer workedTime;
 
     /** 作業日時 */
