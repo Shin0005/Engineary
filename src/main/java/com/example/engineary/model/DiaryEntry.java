@@ -8,7 +8,6 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 
 /**
@@ -25,7 +24,7 @@ public class DiaryEntry {
     private Long id;
 
     /** タイトル */
-    @NotBlank
+    @Column(nullable = false)
     private String title;
 
     /** tag 別テーブルから参照 */
