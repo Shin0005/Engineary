@@ -40,7 +40,7 @@ public class GlobalExceptionHandler {
                 // 400
                 ProblemDetail detail = ProblemDetail.forStatusAndDetail(
                                 HttpStatus.BAD_REQUEST,
-                                "リクエストの形式が正しくありません");
+                                "リクエストが正しくありません");
 
                 // 発生したバリデーションエラーを取得しリストしてdetailに保存
                 List<Map<String, String>> errors = ex.getBindingResult()
@@ -67,12 +67,13 @@ public class GlobalExceptionHandler {
         // 標準的なhttpStatusを持つ例外を自動ハンドル（ResponseStatusExceptionを継承した例外）
         @ExceptionHandler(ResponseStatusException.class)
         public ProblemDetail handleResponseStatusException(ResponseStatusException ex) {
-                log.warn(ex.getMessage());
+                // エラークラスとメッセージを表示する
+                log.warn("[{}] {}", ex.getClass().getSimpleName(), ex.getMessage());
 
                 String msg;
                 switch (ex.getStatusCode().value()) {
                         case 400:
-                                msg = "リクエストの形式が正しくありません";
+                                msg = "不正なリクエストです";
                                 break;
                         case 401:
                                 msg = "認証が必要です";
