@@ -7,6 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ProblemDetail;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -26,10 +27,7 @@ public class GlobalExceptionHandler {
         public ProblemDetail handleResourceNotFoundException(ResourceNotFoundException ex) {
                 log.warn("Resource not found: {}", ex.getMessage());
 
-                // 404 and message="Resource not found. id ={$id}"
-                ProblemDetail detail = ProblemDetail.forStatusAndDetail(HttpStatus.NOT_FOUND, ex.getMessage());
-
-                return detail;
+                return ProblemDetail.forStatusAndDetail(HttpStatus.NOT_FOUND, "指定されたリソースが見つかりませんでした。");
         }
 
         // バリデーション例外
@@ -42,7 +40,7 @@ public class GlobalExceptionHandler {
                 // 400
                 ProblemDetail detail = ProblemDetail.forStatusAndDetail(
                                 HttpStatus.BAD_REQUEST,
-                                "Your request parameters are invalid.");
+                                "リクエストの形式が正しくありません");
 
                 // 発生したバリデーションエラーを取得しリストしてdetailに保存
                 List<Map<String, String>> errors = ex.getBindingResult()
@@ -54,18 +52,43 @@ public class GlobalExceptionHandler {
                                 .toList();
 
                 detail.setProperty("errors", errors);
-
                 return detail;
         }
 
-        // 標準的なhttpStatusを持つ例外を自動ハンドル（ResponseStatusExceptionを継承した例外）
+        // JSONパースエラー
+        @ExceptionHandler(HttpMessageNotReadableException.class)
+        public ProblemDetail handleHttpMessageNotReadableException(HttpMessageNotReadableException ex) {
+                log.warn("Unreadable request: {}", ex.getMessage());
 
+                // 400
+                return ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST, "リクエストの形式が正しくありません");
+        }
+
+        // 標準的なhttpStatusを持つ例外を自動ハンドル（ResponseStatusExceptionを継承した例外）
         @ExceptionHandler(ResponseStatusException.class)
         public ProblemDetail handleResponseStatusException(ResponseStatusException ex) {
                 log.warn(ex.getMessage());
 
+                String msg;
+                switch (ex.getStatusCode().value()) {
+                        case 400:
+                                msg = "リクエストの形式が正しくありません";
+                                break;
+                        case 401:
+                                msg = "認証が必要です";
+                                break;
+                        case 403:
+                                msg = "アクセス権限がありません";
+                                break;
+                        case 404:
+                                msg = "リソースが見つかりません";
+                                break;
+                        default:
+                                msg = "エラーが発生しました";
+                }
+                ;
                 // 例外が持っているステータスコードをそのまま利用
-                return ProblemDetail.forStatusAndDetail(ex.getStatusCode(), ex.getReason());
+                return ProblemDetail.forStatusAndDetail(ex.getStatusCode(), msg);
         }
 
         // 予期せぬ例外（500）
@@ -75,6 +98,6 @@ public class GlobalExceptionHandler {
                 log.error("Unexpected system error", ex);
 
                 return ProblemDetail.forStatusAndDetail(HttpStatus.INTERNAL_SERVER_ERROR,
-                                "An unexpected error occurred");
+                                "予期しないエラーが発生しました。");
         }
 }
