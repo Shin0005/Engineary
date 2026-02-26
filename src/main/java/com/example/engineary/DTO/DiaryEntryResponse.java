@@ -20,7 +20,7 @@ public class DiaryEntryResponse {
     private String contents;
 
     /** 作業時間 */
-    private Double workedTime;
+    private Integer workedTime;
 
     /** 作業日時 デフォルトで当日 */
     private LocalDate workedDate;

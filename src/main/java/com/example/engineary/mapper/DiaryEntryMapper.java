@@ -22,7 +22,7 @@ public class DiaryEntryMapper {
 
         entity.setTitle(request.getTitle());
         entity.setContents(request.getContents());
-        entity.setWorkedTime(Double.valueOf(request.getWorkedTime()));
+        entity.setWorkedTime(request.getWorkedTime());
         entity.setWorkedDate(request.getWorkedDate());
         return entity;
     }
