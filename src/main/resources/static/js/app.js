@@ -68,6 +68,8 @@ document.addEventListener('DOMContentLoaded', () => {
         const id = target.dataset.id;
 
         if (target.classList.contains('btn-delete')) {
+            // 削除前の確認
+            if (!confirm("本当に削除しますか？")) return;
             try {
                 await deleteDiaryEntry(id);
                 // 日誌再読み込み
