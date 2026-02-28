@@ -19,9 +19,9 @@ export async function loadDiary(page) {
  */
 export async function editDiaryEntry(id = null) {
     const data = {
-        title: document.getElementById('diary-title').value,
-        contents: document.getElementById('diary-contents').value,
-        workedTime: document.getElementById('diary-workedTime').value,
+        title: document.getElementById('diary-title').value.trim(),
+        contents: document.getElementById('diary-contents').value.trim(),
+        workedTime: document.getElementById('diary-workedTime').value.trim(),
         workedDate: document.getElementById('diary-workedDate').value
     };
     // IDがあればPUT、なければPOST

@@ -60,7 +60,7 @@ public class DiaryEntryController {
      */
     @PutMapping("/{id}")
     public ResponseEntity<Void> updateDiaryEntry(
-            @NotNull @PathVariable Long id,
+            @PathVariable Long id,
             @Valid @RequestBody DiaryEntryRequest request) {
 
         diaryEntryService.updateDiaryEntry(id, request);

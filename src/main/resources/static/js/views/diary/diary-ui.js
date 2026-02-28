@@ -16,28 +16,63 @@ export function renderDiaryTable(pageData) {
     // 初期化して、取得したentitiesを代入
     listElement.innerHTML = '';
     pageData.content.forEach(entity => {
-        const row = `
-                    <tr>
-                        <td>${entity.workedDate}</td>
-                        <td>${entity.title}</td>
-                        <td>${entity.contents}</td>
-                        <td>${entity.workedTime}</td>
-                        <td>
-                            <button class="btn btn-sm btn-primary" 
-                                data-bs-toggle="modal" 
-                                data-bs-target="#diaryModal" 
-                                data-mode="edit" 
-                                data-id="${entity.id}"
-                                data-title="${entity.title}"
-                                data-contents="${entity.contents}"
-                                data-date="${entity.workedDate}"
-                                data-time="${entity.workedTime}">編集</button>
-                            <button class="btn btn-sm btn-danger btn-delete" data-id="${entity.id}">削除</button>
-                        </td>
-                    </tr>`;
-        listElement.insertAdjacentHTML('beforeend', row);
-    })
+        const row = document.createElement('tr');
+        const entityValues = [
+            entity.workedDate,
+            entity.title,
+            entity.contents ?? '',
+            entity.workedTime
+        ];
+        // rowに列を追加
+        entityValues.forEach(value => {
+            const td = document.createElement('td');
+            td.textContent = value;
+            row.appendChild(td);
+        });
+        // ボタンを作成して列として追加
+        const btnTd = document.createElement('td');
+        const editBtn = createEditButton(entity);
+        const deleteBtn = createDeleteButton(entity.id);
+        btnTd.appendChild(editBtn);
+        btnTd.appendChild(deleteBtn);
+        row.appendChild(btnTd);
 
+        listElement.appendChild(row);
+    });
+}
+
+/**
+ * 編集ボタンを作成する
+ * @param {*} entity 
+ * @returns editBtn
+ */
+function createEditButton(entity) {
+    const btn = document.createElement('button');
+    btn.className = 'btn btn-sm btn-primary';
+    btn.textContent = '編集';
+    btn.dataset.bsToggle = 'modal';
+    btn.dataset.bsTarget = '#diaryModal';
+    btn.dataset.mode = 'edit';
+    // datasetで設定することで予期しない入力があっても後の処理を崩さない
+    btn.dataset.id = entity.id;
+    btn.dataset.title = entity.title;
+    btn.dataset.contents = entity.contents ?? '';
+    btn.dataset.date = entity.workedDate;
+    btn.dataset.time = entity.workedTime;
+    return btn;
+}
+
+/**
+ * 削除ボタンを作成する
+ * @param {Number} id
+ * @returns delateBtn
+ */
+function createDeleteButton(id) {
+    const btn = document.createElement('button');
+    btn.className = 'btn btn-sm btn-danger btn-delete';
+    btn.textContent = '削除';
+    btn.dataset.id = id;
+    return btn;
 }
 
 /**

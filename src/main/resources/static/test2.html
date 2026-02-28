@@ -45,6 +45,35 @@
         border-radius: 12px;
         box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
       }
+      /* テーブルレイアウトを固定 */
+      .table {
+        table-layout: fixed;
+        width: 100%;
+      }
+
+      /* 列幅の比率を指定 */
+      .table th:nth-child(1) {
+        width: 10%;
+      } /* 日付 */
+      .table th:nth-child(2) {
+        width: 20%;
+      } /* タイトル */
+      .table th:nth-child(3) {
+        width: 45%;
+      } /* 内容 */
+      .table th:nth-child(4) {
+        width: 10%;
+      } /* 作業時間 */
+      .table th:nth-child(5) {
+        width: 15%;
+      } /* ボタン */
+
+      /* セル内で折り返す */
+      .table td {
+        word-break: break-word;
+        white-space: normal;
+        vertical-align: middle;
+      }
     </style>
   </head>
   <body>
