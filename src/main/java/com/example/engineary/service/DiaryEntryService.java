@@ -49,6 +49,7 @@ public class DiaryEntryService {
      * @param request DiaryEntryRequest
      * @return DiaryEntryResponse 保存した日誌
      */
+    @Transactional
     public DiaryEntryResponse createDiaryEntry(DiaryEntryRequest request) {
 
         DiaryEntry inputEntity = DiaryEntryMapper.toEntity(request);
@@ -68,6 +69,7 @@ public class DiaryEntryService {
      * @param id      Long
      * @param request DiaryEntryRequest
      */
+    @Transactional
     public void updateDiaryEntry(Long id, DiaryEntryRequest request) {
         DiaryEntry entry = diaryEntryRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException(id));
@@ -88,6 +90,7 @@ public class DiaryEntryService {
      * 
      * @param id Long
      */
+    @Transactional
     public void deleteDiaryEntry(Long id) {
 
         // エラーを明確に出すためにfind->delete
