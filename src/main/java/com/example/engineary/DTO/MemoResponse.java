@@ -1,0 +1,27 @@
+package com.example.engineary.dto;
+
+import java.time.LocalDate;
+
+import lombok.Data;
+
+/**
+ * 出力処理用のDTO<br>
+ * apiからの出力をフロントに返す型
+ */
+@Data
+public class MemoResponse {
+    /** 日誌id */
+    private Long id;
+
+    /** タイトル */
+    private String title;
+
+    /** 内容 */
+    private String contents;
+
+    /** 作業時間 */
+    private Integer workedTime;
+
+    /** 作業日時 デフォルトで当日 */
+    private LocalDate workedDate;
+}
