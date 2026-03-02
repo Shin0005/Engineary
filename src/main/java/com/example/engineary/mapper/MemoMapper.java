@@ -22,8 +22,6 @@ public class MemoMapper {
 
         entity.setTitle(request.getTitle());
         entity.setContents(request.getContents());
-        entity.setWorkedTime(request.getWorkedTime());
-        entity.setWorkedDate(request.getWorkedDate());
         return entity;
     }
 
@@ -39,8 +37,7 @@ public class MemoMapper {
         response.setId(entity.getId());
         response.setTitle(entity.getTitle());
         response.setContents(entity.getContents());
-        response.setWorkedTime(entity.getWorkedTime());
-        response.setWorkedDate(entity.getWorkedDate());
+        response.setUpdatedAt(entity.getUpdatedAt());
 
         return response;
     }

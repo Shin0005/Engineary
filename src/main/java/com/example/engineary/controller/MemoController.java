@@ -19,7 +19,7 @@ import jakarta.validation.constraints.NotNull;
  * 日誌機能コントローラ
  */
 @RestController
-@RequestMapping("/api/diary")
+@RequestMapping("/api/memo")
 public class MemoController {
 
     private final MemoService memoService;

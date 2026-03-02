@@ -1,6 +1,6 @@
 package com.example.engineary.dto;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 import lombok.Data;
 
@@ -19,9 +19,6 @@ public class MemoResponse {
     /** 内容 */
     private String contents;
 
-    /** 作業時間 */
-    private Integer workedTime;
-
-    /** 作業日時 デフォルトで当日 */
-    private LocalDate workedDate;
+    /** 最終更新日時 */
+    private LocalDateTime updatedAt;
 }

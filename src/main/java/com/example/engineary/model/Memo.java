@@ -1,6 +1,5 @@
 package com.example.engineary.model;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 import org.hibernate.annotations.UpdateTimestamp;
@@ -16,7 +15,7 @@ import lombok.Data;
 @Entity
 @EntityListeners(AuditingEntityListener.class)
 @Data
-@Table(name = "entries")
+@Table(name = "memos")
 public class Memo {
     /** 投稿Id */
     @Id
@@ -32,12 +31,6 @@ public class Memo {
 
     /** 内容 */
     private String contents;
-
-    /** 作業時間 */
-    private Integer workedTime;
-
-    /** 作業日時 */
-    private LocalDate workedDate;
 
     /** 最終更新日時 */
     @UpdateTimestamp

@@ -26,7 +26,7 @@ public class MemoService {
     /**
      * ページングを用いてレポジトリから日誌を取得する<br>
      * 1. repositoryから日誌を取得<br>
-     * 2. MemoからResponse変換して返却
+     * 2. EntityからResponse変換して返却
      * 
      * @param pageable
      * @return Page&lt;MemoResponse&gt; 複数の日誌
@@ -77,8 +77,6 @@ public class MemoService {
         Memo entryDetails = MemoMapper.toEntity(request);
         entry.setTitle(entryDetails.getTitle());
         entry.setContents(entryDetails.getContents());
-        entry.setWorkedTime(entryDetails.getWorkedTime());
-        entry.setWorkedDate(entryDetails.getWorkedDate());
 
         memoRepository.save(entry);
     }
