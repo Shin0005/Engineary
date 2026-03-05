@@ -14,17 +14,20 @@ export function updatePaginationUI(pageData) {
     const prevBtn = document.getElementById('prev-page');
     const nextBtn = document.getElementById('next-page');
 
+    prevBtn.classList.toggle('invisible', pageData.number === 0);
+    nextBtn.classList.toggle('invisible', pageData.number === pageData.totalPages - 1);
+}
+/**
+ * ページングボタンのイベント登録
+ * @param {Function} onPrev 前へボタンクリック時のコールバック
+ * @param {Function} onNext 次へボタンクリック時のコールバック
+ */
+export function initPaging(onPrev, onNext) {
     // 前のページがないなら隠す、あるなら表示する
-    if (pageData.number === 0) {
-        prevBtn.classList.add('invisible');
-    } else {
-        prevBtn.classList.remove('invisible');
-    }
+    document.getElementById('prev-page')
+        .addEventListener('click', onPrev);
 
     // 次のページがないなら隠す、あるなら表示する
-    if (pageData.number === pageData.totalPages - 1) {
-        nextBtn.classList.add('invisible');
-    } else {
-        nextBtn.classList.remove('invisible');
-    }
+    document.getElementById('next-page')
+        .addEventListener('click', onNext);
 }
