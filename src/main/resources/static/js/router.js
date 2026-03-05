@@ -4,6 +4,8 @@
  * @param {Function} initWindow ウィンドウ初期化関数
  */
 export const initRouter = (initWindow) => {
+    // 初期機能を日誌に設定
+    window.history.replaceState(null, null, '/diary');
 
     // リンク初期化（リンククリック → URLを特定）
     document.body.addEventListener("click", (e) => {
