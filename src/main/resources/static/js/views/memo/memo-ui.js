@@ -1,15 +1,15 @@
 import { showSection } from '../../components/section.js';
 
 /**
- * 日誌一覧テーブルをレンダリングする
+ * メモ一覧テーブルをレンダリングする
  * @param {Object} pageData APIから取得したページングデータ
  */
-export function renderDiaryTable(pageData) {
+export function renderMemoTable(pageData) {
     // セクションを表示
-    showSection('diary-section');
+    showSection('memo-section');
 
-    // tbody(diary-list)の取得
-    const listElement = document.getElementById('diary-list');
+    // tbody(memo-list)の取得
+    const listElement = document.getElementById('memo-list');
     if (!listElement) return;
 
     // pageDataまたはcontentが空だった場合
@@ -18,15 +18,17 @@ export function renderDiaryTable(pageData) {
         return;
     }
 
+    pageData.content.updatedAt
+
     // 初期化して、取得したentitiesを代入
     listElement.innerHTML = '';
     pageData.content.forEach(entity => {
         const row = document.createElement('tr');
         const entityValues = [
-            entity.workedDate,
+            formatDateTime(entity.updatedAt),
             entity.title,
-            entity.contents ?? '',
-            entity.workedTime
+            entity.contents ?? ''
+
         ];
         // rowに列を追加
         entityValues.forEach(value => {
@@ -56,14 +58,14 @@ function createEditButton(entity) {
     btn.className = 'btn btn-sm btn-primary';
     btn.textContent = '編集';
     btn.dataset.bsToggle = 'modal';
-    btn.dataset.bsTarget = '#diaryModal';
+    btn.dataset.bsTarget = '#memoModal';
     btn.dataset.mode = 'edit';
     // datasetで設定することで予期しない入力があっても後の処理を崩さない
     btn.dataset.id = entity.id;
+    btn.dataset.date = formatDateTime(entity.updatedAt);
     btn.dataset.title = entity.title;
     btn.dataset.contents = entity.contents ?? '';
-    btn.dataset.date = entity.workedDate;
-    btn.dataset.time = entity.workedTime;
+
     return btn;
 }
 
@@ -79,15 +81,28 @@ function createDeleteButton(id) {
     btn.dataset.id = id;
     return btn;
 }
+/**
+ * JavaのLocalTimeDateからyyyy-MM-dd HH:mm形式へ変換する
+ * @param {*} raw 
+ * @returns 
+ */
+function formatDateTime(dateTime) {
+    if (!dateTime) return '';
+    const date = new Date(dateTime);
+    return date.toLocaleDateString('sv-SE')
+        + ' '
+        + date.toLocaleTimeString('ja-JP', { hour: '2-digit', minute: '2-digit' });
+}
 
 /**
- * 日誌入力モーダルを非表示にする
+ * メモ入力モーダルを非表示にする
  */
-export function hideDiaryModal() {
+export function hideMemoModal() {
     // モーダルを閉じる処理を追加
-    const modalElement = document.getElementById('diaryModal');
+    const modalElement = document.getElementById('memoModal');
     const modalInstance = bootstrap.Modal.getInstance(modalElement);
     if (modalInstance) {
         modalInstance.hide();
     }
 }
+
