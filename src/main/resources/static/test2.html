@@ -17,6 +17,7 @@
         display: flex;
         background-color: #f4f7f6;
       }
+
       /* サイドバー装飾 */
       .sidebar {
         width: var(--sidebar-width);
@@ -34,6 +35,7 @@
         color: white;
         background-color: #343a40;
       }
+
       /* メインコンテンツ位置調整 */
       .main-content {
         margin-left: var(--sidebar-width);
@@ -45,38 +47,52 @@
         border-radius: 12px;
         box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
       }
-      /* テーブルレイアウトを固定 */
+
+      /* テーブル共通 */
       .table {
         table-layout: fixed;
         width: 100%;
       }
-
-      /* 列幅の比率を指定 */
-      .table th:nth-child(1) {
-        width: 10%;
-      } /* 日付 */
-      .table th:nth-child(2) {
-        width: 20%;
-      } /* タイトル */
-      .table th:nth-child(3) {
-        width: 45%;
-      } /* 内容 */
-      .table th:nth-child(4) {
-        width: 10%;
-      } /* 作業時間 */
-      .table th:nth-child(5) {
-        width: 15%;
-      } /* ボタン */
-
-      /* セル内で折り返す */
       .table td {
         word-break: break-word;
         white-space: normal;
         vertical-align: middle;
       }
+
+      /* diary テーブル列幅: 日付 / タイトル / 内容 / 作業時間 / ボタン */
+      #diary-section .table th:nth-child(1) {
+        width: 10%;
+      }
+      #diary-section .table th:nth-child(2) {
+        width: 20%;
+      }
+      #diary-section .table th:nth-child(3) {
+        width: 45%;
+      }
+      #diary-section .table th:nth-child(4) {
+        width: 10%;
+      }
+      #diary-section .table th:nth-child(5) {
+        width: 15%;
+      }
+
+      /* memo テーブル列幅: 更新日時 / タイトル / 内容 / ボタン */
+      #memo-section .table th:nth-child(1) {
+        width: 15%;
+      }
+      #memo-section .table th:nth-child(2) {
+        width: 20%;
+      }
+      #memo-section .table th:nth-child(3) {
+        width: 50%;
+      }
+      #memo-section .table th:nth-child(4) {
+        width: 15%;
+      }
     </style>
   </head>
   <body>
+    <!-- サイドバー -->
     <nav class="sidebar d-flex flex-column p-3">
       <h3 class="p-3">Engineary</h3>
       <hr />
@@ -85,7 +101,9 @@
           <a href="/memo" class="nav-link" id="menu-memo" data-link>メモ</a>
         </li>
         <li>
-          <a href="/diary" class="nav-link active" id="menu-diary" data-link>日誌</a>
+          <a href="/diary" class="nav-link active" id="menu-diary" data-link
+            >日誌</a
+          >
         </li>
         <li>
           <a href="#" class="nav-link" id="menu-tag">タグ管理</a>
@@ -96,6 +114,7 @@
     </nav>
 
     <main class="main-content">
+      <!-- 日誌セクション -->
       <section id="diary-section">
         <div class="d-flex justify-content-between align-items-center mb-4">
           <h2 class="fw-bold">日誌一覧</h2>
@@ -108,7 +127,6 @@
             + 新規作成
           </button>
         </div>
-
         <div class="card">
           <div class="card-body p-0">
             <table class="table table-hover mb-0">
@@ -131,39 +149,70 @@
             </table>
           </div>
         </div>
-        <!-- ページングフッター -->
-        <nav aria-label="Page navigation" class="mt-4">
-          <div class="d-flex justify-content-center align-items-center gap-3">
-            <button
-              class="btn btn-outline-primary btn-sm px-3 invisible"
-              id="prev-page"
-            >
-              &laquo; 戻る
-            </button>
-
-            <div class="text-muted small fw-bold">
-              Page <span id="current-page">1</span> out of
-              <span id="total-pages">--</span>
-            </div>
-
-            <button
-              class="btn btn-outline-primary btn-sm px-3 invisible"
-              id="next-page"
-            >
-              次へ &raquo;
-            </button>
-          </div>
-
-          <div
-            class="text-center text-muted x-small mt-2"
-            style="font-size: 0.8rem"
-          >
-            Total: <span id="total-elements">0</span> entries
-          </div>
-        </nav>
       </section>
+
+      <!-- メモセクション -->
+      <section id="memo-section" class="d-none">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+          <h2 class="fw-bold">メモ一覧</h2>
+          <button
+            class="btn btn-primary shadow-sm"
+            data-bs-toggle="modal"
+            data-bs-target="#memoModal"
+            data-mode="create"
+          >
+            + 新規作成
+          </button>
+        </div>
+        <div class="card">
+          <div class="card-body p-0">
+            <table class="table table-hover mb-0">
+              <thead class="table-light">
+                <tr>
+                  <th>更新日時</th>
+                  <th class="ps-4">タイトル</th>
+                  <th>内容</th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody id="memo-list">
+                <tr>
+                  <td colspan="4" class="text-center py-4 text-muted">
+                    データを読み込み中...
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+      <!-- ページングフッター -->
+      <nav aria-label="Page navigation" class="mt-4">
+        <div class="d-flex justify-content-center align-items-center gap-3">
+          <button
+            class="btn btn-outline-primary btn-sm px-3 invisible"
+            id="prev-page"
+          >
+            &laquo; 戻る
+          </button>
+          <div class="text-muted small fw-bold">
+            Page <span id="current-page">1</span> out of
+            <span id="total-pages">--</span>
+          </div>
+          <button
+            class="btn btn-outline-primary btn-sm px-3 invisible"
+            id="next-page"
+          >
+            次へ &raquo;
+          </button>
+        </div>
+        <div class="text-center text-muted mt-2" style="font-size: 0.8rem">
+          Total: <span id="total-elements">0</span> entries
+        </div>
+      </nav>
     </main>
-    <!-- モーダル -->
+
+    <!-- 日誌モーダル -->
     <div class="modal fade" id="diaryModal" tabindex="-1" aria-hidden="true">
       <div class="modal-dialog">
         <div class="modal-content">
@@ -178,12 +227,12 @@
           <div class="modal-body">
             <form id="diary-form">
               <div class="mb-3">
-                <label for="title" class="form-label">タイトル</label>
+                <label class="form-label">タイトル</label>
                 <input type="text" class="form-control" id="diary-title" />
-                <div id="title-error" class="invalid-feedback"></div>
+                <div id="diary-title-error" class="invalid-feedback"></div>
               </div>
               <div class="mb-3">
-                <label for="content" class="form-label">内容</label>
+                <label class="form-label">内容</label>
                 <textarea
                   class="form-control"
                   id="diary-contents"
@@ -191,14 +240,14 @@
                 ></textarea>
               </div>
               <div class="mb-3">
-                <label for="workedTime" class="form-label">作業時間</label>
+                <label class="form-label">作業時間</label>
                 <input type="text" class="form-control" id="diary-workedTime" />
-                <div id="workedTime-error" class="invalid-feedback"></div>
+                <div id="diary-workedTime-error" class="invalid-feedback"></div>
               </div>
               <div class="mb-3">
-                <label for="workedDate" class="form-label">作業日</label>
+                <label class="form-label">作業日</label>
                 <input type="date" class="form-control" id="diary-workedDate" />
-                <div id="workedDate-error" class="invalid-feedback"></div>
+                <div id="diary-workedDate-error" class="invalid-feedback"></div>
               </div>
             </form>
           </div>
@@ -222,6 +271,58 @@
         </div>
       </div>
     </div>
+
+    <!-- メモモーダル -->
+    <div class="modal fade" id="memoModal" tabindex="-1" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">メモを記録する</h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <form id="memo-form">
+              <div class="mb-3">
+                <label class="form-label">タイトル</label>
+                <input type="text" class="form-control" id="memo-title" />
+                <div id="memo-title-error" class="invalid-feedback"></div>
+              </div>
+              <div class="mb-3">
+                <label class="form-label">内容</label>
+                <textarea
+                  class="form-control"
+                  id="memo-contents"
+                  rows="7"
+                ></textarea>
+                <div id="memo-contents-error" class="invalid-feedback"></div>
+              </div>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-bs-dismiss="modal"
+            >
+              閉じる
+            </button>
+            <button
+              type="submit"
+              form="memo-form"
+              class="btn btn-primary"
+              id="memo-btn-save"
+            >
+              保存
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <!-- トースト -->
     <div class="toast-container position-fixed bottom-0 end-0 p-3">
       <div
@@ -244,7 +345,6 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-
     <script type="module" src="./js/app.js"></script>
   </body>
 </html>
