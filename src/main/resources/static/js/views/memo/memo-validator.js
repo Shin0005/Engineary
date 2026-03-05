@@ -25,6 +25,18 @@ export function validMemoForm() {
         titleInput.classList.remove('is-invalid'); // エラーを消す
     }
 
+    // 内容：5000文字以内
+    const contentsInput = document.getElementById('memo-contents');
+    if (!dateInput) return false;
+    const contentsValue = dateInput.value.trim();
+    const contentsError = document.getElementById("memo-contents-error");
+    if (!contentsError) return false;
+    if (contentsValue.length <= 5000) {
+        contentsError.innerText = "内容は5000文字以内で入力する必要があります。";
+        contentsInput.classList.add('is-invalid');
+        validFlg = false;
+    }
+
     if (validFlg === false) {
         return false;
     }

@@ -25,6 +25,18 @@ export function validDiaryForm() {
         titleInput.classList.remove('is-invalid'); // エラーを消す
     }
 
+    // 内容：5000文字以内
+    const contentsInput = document.getElementById('diary-contents');
+    if (!dateInput) return false;
+    const contentsValue = dateInput.value.trim();
+    const contentsError = document.getElementById("diary-contents-error");
+    if (!contentsError) return false;
+    if (contentsValue.length <= 5000) {
+        contentsError.innerText = "内容は5000文字以内で入力する必要があります。";
+        contentsInput.classList.add('is-invalid');
+        validFlg = false;
+    }
+
     // 作業時間：　入力形式(数値ONLY)
     const timeInput = document.getElementById('diary-workedTime');
     if (!timeInput) return false;
