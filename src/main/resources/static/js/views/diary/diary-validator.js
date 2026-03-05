@@ -3,14 +3,14 @@
  * Formのバリデーションを行う
  * @returns {Boolean}
  */
-export function validForm() {
+export function validDiaryForm() {
     let validFlg = true;
 
     // タイトル：　入力必須，１００文字以内
     const titleInput = document.getElementById('diary-title');
     if (!titleInput) return false;
     const titleValue = titleInput.value.trim();
-    const titleError = document.getElementById("title-error");
+    const titleError = document.getElementById("diary-title-error");
     if (!titleError) return false;
 
     if (titleValue === "") {
@@ -29,12 +29,12 @@ export function validForm() {
     const timeInput = document.getElementById('diary-workedTime');
     if (!timeInput) return false;
     const timeValue = timeInput.value.trim();
-    const timeError = document.getElementById("workedTime-error");
+    const timeError = document.getElementById("diary-workedTime-error");
     if (!timeError) return false;
     const timeNum = Number(timeValue);
     // 数値でない、または０以下、または整数でない
-    if (isNaN(timeNum) || timeNum <= 0 || !Number.isInteger(timeNum)) {
-        timeError.innerText = "作業時間は1分以上の整数で入力してください。";
+    if (isNaN(timeNum) || timeNum <= 0 || !Number.isInteger(timeNum) || timeNum > 1440) {
+        timeError.innerText = "作業時間は1分以上1440以下の整数で入力してください。";
         timeInput.classList.add('is-invalid');
         validFlg = false;
     }
@@ -43,7 +43,7 @@ export function validForm() {
     const dateInput = document.getElementById('diary-workedDate');
     if (!dateInput) return false;
     const dateValue = dateInput.value.trim();
-    const dateError = document.getElementById("workedDate-error");
+    const dateError = document.getElementById("diary-workedDate-error");
     if (!dateError) return false;
     if (dateValue === "") {
         dateError.innerText = "作業日時は入力する必要があります。";
