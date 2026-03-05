@@ -35,20 +35,25 @@ window.onload = () => initWindow(window.location.pathname);
  * @param {*} path URL 
  */
 function initWindow(path) {
+    // サイドバーのactiveを更新
+    document.querySelectorAll('.sidebar .nav-link[data-link]').forEach(link => {
+        link.classList.toggle('active', link.getAttribute('href') === path);
+    });
+
     // 機能によって初期化関数を選択
-    const init = features[path] ?? features["/diary"]; // 初期値diary
+    const init = features[path] ?? features["/diary"];
 
     // refresh関数を更新
     currentRefresh = init({
-        // 各init内のmodal保存ボタン初期化するコールバック
+        // 各init内のテーブル保存ボタン初期化してコールバック
         onSaved: (msg) => {
+            refreshWindow(currentPage);
             showNotify(msg);
-            refreshWindow(currentPage);
         },
-        // 各init内のmodal削除ボタン初期化するコールバック
+        // 各init内のテーブル削除ボタン初期化するコールバック
         onDeleted: () => {
-            showNotify('削除しました');
             refreshWindow(currentPage);
+            showNotify('削除しました');
         },
         onError: (msg) => showNotify(msg, 'error'),
     });
