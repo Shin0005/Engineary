@@ -1,10 +1,10 @@
-import { initDiaryModal } from './diary-modal.js';
-import { validDiaryForm } from './diary-validator.js';
-import { editDiaryEntry, deleteDiaryEntry, loadDiary } from './diary-crud.js';
-import { renderDiaryTable, hideDiaryModal } from './diary-ui.js';
+import { initMemoModal } from './memo-modal.js';
+import { validMemoForm } from './memo-validator.js';
+import { editMemo, deleteMemo, loadMemo } from './memo-crud.js';
+import { renderMemoTable, hideMemoModal } from './memo-ui.js';
 
 /**
- * diary機能の初期化
+ * memo機能の初期化
  * テーブル・モーダル・ボタンイベントをまとめて登録する
  * @param {Object}   callbacks
  * @param {Function} callbacks.onSaved   保存成功時 (msg) => void
@@ -12,10 +12,10 @@ import { renderDiaryTable, hideDiaryModal } from './diary-ui.js';
  * @param {Function} callbacks.onError   エラー時   (msg) => void
  * @returns {Function} refresh(page) - テーブル再描画関数
  */
-export function initDiary({ onSaved, onDeleted, onError }) {
+export function initMemo({ onSaved, onDeleted, onError }) {
 
     // モーダル初期化
-    initDiaryModal();
+    initMemoModal();
 
     // 保存ボタン
     initSaveBtn({ onSaved, onError });
@@ -25,43 +25,42 @@ export function initDiary({ onSaved, onDeleted, onError }) {
 
     // refresh関数を返す（app.jsのrefreshWindowが呼び出す）
     return async (page) => {
-        const pageData = await loadDiary(page);
-        renderDiaryTable(pageData);
+        const pageData = await loadMemo(page);
+        renderMemoTable(pageData);
         return pageData;
     };
 }
 
 /**
- * テーブル保存ボタン初期化関数\
+ * 保存ボタン初期化関数\
  * 通知タイミングはapp.jsに委譲
  * @param {*} { onSaved, onError } コールバック関数
  */
 function initSaveBtn({ onSaved, onError }) {
     let isSubmitting = false;
-    const saveForm = document.getElementById('diary-form');
-    const saveBtn = document.getElementById('diary-btn-save');
+    const saveForm = document.getElementById('memo-form');
+    const saveBtn = document.getElementById('memo-btn-save');
     if (!saveForm || !saveBtn) return;
     // 多重登録防止フラグ
     if (saveForm.dataset.initialized) return;
     saveForm.dataset.initialized = 'true';
 
-
     saveForm.addEventListener('submit', async (event) => {
         event.preventDefault();
         if (isSubmitting) return;
-        if (!validDiaryForm()) return;
+        if (!validMemoForm()) return;
 
-        const id = document.getElementById('diaryModal').dataset.currentId;
+        const id = document.getElementById('memoModal').dataset.currentId;
 
         try {
             isSubmitting = true;
             saveBtn.disabled = true;
 
-            await editDiaryEntry(id);
-            hideDiaryModal();
+            await editMemo(id);
+            hideMemoModal();
 
             // 成功をapp.jsに通知（メッセージだけ渡す）
-            const msg = id ? '日誌が更新されました' : '日誌が作成されました';
+            const msg = id ? 'メモが更新されました' : 'メモが作成されました';
             onSaved(msg);
 
         } catch (error) {
@@ -79,12 +78,12 @@ function initSaveBtn({ onSaved, onError }) {
 }
 
 /**
- * テーブル削除ボタン初期化関数\
+ * 削除ボタン初期化関数\
  * 通知タイミングはapp.jsに委譲
  * @param {*} { onDeleted, onError } コールバック関数
  */
 function initDeleteBtn({ onDeleted, onError }) {
-    const listElement = document.getElementById('diary-list');
+    const listElement = document.getElementById('memo-list');
     if (!listElement) return;
     // 多重登録防止フラグ
     if (listElement.dataset.initialized) return;
@@ -97,7 +96,7 @@ function initDeleteBtn({ onDeleted, onError }) {
 
         const id = target.dataset.id;
         try {
-            await deleteDiaryEntry(id);
+            await deleteMemo(id);
             onDeleted(); // 成功をapp.jsに通知
 
         } catch (error) {
