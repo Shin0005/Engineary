@@ -1,51 +1,21 @@
 /**
- * モーダルの初期化
+ * モーダルの汎用初期化関数
+ * フォームリセット・バリデーションクリア・currentIdの削除のみ行う
+ * @param {string} modalId モーダル要素のID
+ * @param {string} formId  フォーム要素のID
  */
-export function initModal() {
+export function initModal(modalId, formId) {
+    const modal = document.getElementById(modalId);
+    const form = document.getElementById(formId);
+    if (!modal || !form) return;
 
-    const modal = document.getElementById("diaryModal");
-    if (!modal) return;
-
-    // モーダルを閉じるタイミングの処理
     modal.addEventListener("hidden.bs.modal", () => {
-        const form = document.getElementById('diary-form');
         // 入力値のクリア
         form.reset();
-        // すべてのバリデーションエラーの除去
-        const inputs = form.querySelectorAll('.is-invalid');
-        inputs.forEach(input => input.classList.remove('is-invalid'));
+        // バリデーションエラーの除去
+        form.querySelectorAll('.is-invalid')
+            .forEach(el => el.classList.remove('is-invalid'));
         // 編集用IDの削除
         delete modal.dataset.currentId;
-    });
-
-    // モーダルを開けたタイミングの処理
-    modal.addEventListener("show.bs.modal", (event) => {
-        const button = event.relatedTarget;
-        const mode = button.getAttribute("data-mode");
-        const titleInput = document.getElementById('diary-title');
-        const contentsInput = document.getElementById('diary-contents');
-        const timeInput = document.getElementById('diary-workedTime');
-        const dateInput = document.getElementById('diary-workedDate');
-        const modalTitle = modal.querySelector(".modal-title");
-
-        //モーダルの値を初期化
-        if (mode === "create") {
-            modalTitle.textContent = "新規作成";
-            // 今日の日付をセット
-            dateInput.value = new Date().toLocaleDateString('sv-SE');
-
-        } else if (mode === "edit") {
-            modalTitle.textContent = "編集";
-            // ボタンに仕込んだ data-属性から値をセット
-            titleInput.value = button.getAttribute("data-title");
-            contentsInput.value = button.getAttribute("data-contents");
-            timeInput.value = button.getAttribute("data-time");
-            // DateOBJに変換してから代入
-            const rawDateObj = new Date(button.getAttribute("data-date"));
-            const formattedDate = rawDateObj.toLocaleDateString('sv-SE');
-            dateInput.value = formattedDate;
-            // 現在編集中のIDをモーダル自体に覚えさせる
-            modal.dataset.currentId = button.getAttribute("data-id");
-        }
     });
 }
