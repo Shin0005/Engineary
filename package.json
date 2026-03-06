@@ -1,0 +1,15 @@
+{
+  "name": "engineary-frontend-test",
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:ui": "vitest --ui"
+  },
+  "devDependencies": {
+    "vitest": "^2.0.0",
+    "jsdom": "^25.0.0",
+    "@vitest/ui": "^2.0.0"
+  }
+}

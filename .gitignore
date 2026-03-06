@@ -34,3 +34,7 @@ build/
 
 ### Sqlite ###
 engineary.db
+
+### Vitest ###
+node_modules/
+package-lock.json
