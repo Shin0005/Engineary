@@ -7,7 +7,7 @@ export function updatePaginationUI(pageData) {
     const totalSpan = document.getElementById('total-pages');
     const totalElements = document.getElementById('total-elements');
 
-    currentSpan.textContent = pageData.number + 1; // 表示用は+1
+    currentSpan.textContent = pageData.totalPages === 0 ? 0 : pageData.number + 1;
     totalSpan.textContent = pageData.totalPages;
     totalElements.textContent = pageData.totalElements;
 
@@ -15,7 +15,7 @@ export function updatePaginationUI(pageData) {
     const nextBtn = document.getElementById('next-page');
 
     prevBtn.classList.toggle('invisible', pageData.number === 0);
-    nextBtn.classList.toggle('invisible', pageData.number === pageData.totalPages - 1);
+    nextBtn.classList.toggle('invisible', pageData.totalPages === 0 || pageData.number === pageData.totalPages - 1);
 }
 /**
  * ページングボタンのイベント登録
